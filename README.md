@@ -7,7 +7,7 @@ Controls:
 
 * Space - uncover current box
 
-* F key - but F in current box
+* F key - flag current box
 
 <br />
 <br />
