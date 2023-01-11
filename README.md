@@ -3,19 +3,22 @@
 
 Controls:
 
-Arrow keys - move around map
+* Arrow keys - move around map
 
-Space - uncover current box
+* Space - uncover current box
 
-F key - but F in current box
+* F key - but F in current box
 
+<br />
+<br />
 
-To run file type:
+To run file type in terminal:
 
-gcc -w saper.c -o main -lncurses
+>gcc -w saper.c -o main -lncurses
 
-./main 20 20 398
+>./main 20 20 398
 
-
+<br />
+<br />
 
 Game created by Leon Lepkowski
