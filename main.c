@@ -1,5 +1,7 @@
-#include "saper.h"
 #include <ncurses.h>
+#include <string.h>
+
+#include "saper.h"
 
 int MAX_ROWS, MAX_COLS, MINES;
 
