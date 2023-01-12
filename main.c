@@ -3,8 +3,6 @@
 
 #include "saper.h"
 
-int MAX_ROWS, MAX_COLS, MINES;
-
 int main(int argc, char* argv[])
 {
     MAX_ROWS = strtol(argv[1], NULL, 10);
