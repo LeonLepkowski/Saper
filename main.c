@@ -1,89 +1,46 @@
-#include <ncurses.h>
-#include <string.h>
-
 #include "saper.h"
+#include <ncurses.h>
+
+int MAX_ROWS, MAX_COLS, MINES;
 
 int main(int argc, char* argv[])
 {
-    fprintf(stderr, "Beginning of the main function!\n");
-
     MAX_ROWS = strtol(argv[1], NULL, 10);
     MAX_COLS = strtol(argv[2], NULL, 10);
     MINES = strtol(argv[3], NULL, 10);
+
+    start(MAX_ROWS, MAX_COLS, MINES);
+    if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
+        return 0;
+
     int slim = 0;
     if (argc == 5)
         if (strcmp(argv[4], "--slim") == 0)
             slim = 1;
 
-    fprintf(stderr, "Starting!\n");
-
-    start(MAX_ROWS, MAX_COLS, MINES);
-
-    fprintf(stderr, "Started!\n");
-
-    // Seed the random number generator
-    srand(time(0));
-
-    // Initialize ncursed
     initscr();
-
-    if (MINES >= MAX_COLS * MAX_ROWS) {
-        printw("TOO MUCH BOMBS\n\n");
-        // Wait for the user to press a key before exiting
-        printw("Press any key to exit...\n");
-        getch();
-
-        // Clean up ncursed
-        endwin();
-        return 0;
-    }
-
-    // Iinitialize colors
-    start_color();
-    init_pair(1, COLOR_BLUE, A_NORMAL);
-    init_pair(2, COLOR_GREEN, A_NORMAL);
-    init_pair(3, COLOR_RED, A_NORMAL);
-    init_pair(4, COLOR_CYAN, A_NORMAL);
-    init_pair(5, COLOR_MAGENTA, A_NORMAL);
-    init_pair(6, COLOR_YELLOW, A_NORMAL);
-    init_pair(7, COLOR_WHITE, A_NORMAL);
-
-    // Enable the use of arrow keys
+    curs_set(0);
+    initialize_colors();
     keypad(stdscr, TRUE);
+    srand(time(FALSE));
 
-    // Set up the board
     char board[MAX_ROWS][MAX_COLS];
     int rows = MAX_ROWS;
     int cols = MAX_COLS;
     int mines = MINES;
-    int move = 0;
-
     int b_flagi;
     int sap[MAX_ROWS][MAX_COLS];
     int to[MAX_ROWS][MAX_COLS];
-
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            to[i][j] = 0;
-        }
-    }
-
-    setup_board(board, sap, rows, cols, mines);
-
-    // Main game loop
     int row, col;
-
+    
+    setup_board(board, sap, to, rows, cols, mines);
     getyx(stdscr, row, col);
-    while (1 != 0) {
-        // Draw the board
-        draw_board(board, rows, cols, row, col, slim, sap);
 
-        // Get the user's action
-        printw("Enter action (' ' = reveal, f = mark as mine, arrow keys = move cursor): ");
+    while (1 != 0) {
+        draw_board(board, rows, cols, row, col, slim, sap);
 
         int action = wgetch(stdscr);
 
-        // Handle arrow key input
         if (action == KEY_LEFT && col > 0) {
             col--;
         } else if (action == KEY_RIGHT && col < cols - 1) {
@@ -94,33 +51,22 @@ int main(int argc, char* argv[])
             row++;
         }
 
-        if (action == ' ' && sap[row][col] == 9 && move == 0) {
+        if (uncovered(board) == 0 && action == ' ' && sap[row][col] == 9) {
             zero_move(row, col, sap, board, rows, cols);
-            move = 1;
         }
 
-        // Update the board
-        if (action == ' ') {
-            if (sprawdz(row, col, sap, board)) {
-                // Wait for the user to press a key before exiting
-                printw("Press any key to exit...\n");
-                getch();
-
-                // Clean up ncursed
-                endwin();
-                return 0;
-            }
+        if (action == ' ' && sprawdz(row, col, sap, board)) {
+            draw_board(board, rows, cols, row, col, slim, sap);
+            gameover();
+            end();
+            return 0;
         }
         update_board(board, sap, to, rows, cols, &row, &col, action);
+
         if (czy_koniec(b_flagi, board) == MAX_COLS * MAX_ROWS - MINES) {
             draw_board(board, rows, cols, row, col, slim, sap);
-            wygrana();
-            // Wait for the user to press a key before exiting
-            printw("Press any key to exit...\n");
-            getch();
-
-            // Clean up ncursed
-            endwin();
+            win();
+            end();
             return 0;
         }
     }

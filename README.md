@@ -14,9 +14,11 @@ Controls:
 
 To run file type in terminal:
 
->gcc -w saper.c -o main -lncurses
+gcc -w saper.c main.c -o main -lncurses
 
->./main 20 20 398
+./main hight width mines
+
+>You can also add --slim so your game will be narrow
 
 <br />
 <br />
