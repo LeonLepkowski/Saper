@@ -239,7 +239,7 @@ void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS]
         printw("%c", board[i][j]);
 }
 
-void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MAX_COLS], int rows, int cols)
+void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS], int rows, int cols)
 {
     sap[i][j] = 0;
     if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && sap[i + 1][j + 1] != 9)

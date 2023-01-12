@@ -15,7 +15,7 @@ void saper(int a, int b, char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_C
 bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS]);
 void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS]);
 void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS]);
-void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MAX_COLS], int rows, int cols);
+void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS], int rows, int cols);
 int uncovered(char board[MAX_ROWS][MAX_COLS]);
 bool too_much_bombs(int MAX_ROWS, int MAX_COLS, int MINES);
 void initialize_colors();
