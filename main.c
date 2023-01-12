@@ -34,15 +34,7 @@ int main(int argc, char* argv[])
     }
 
     // Iinitialize colors
-    start_color();
-    init_pair(1, COLOR_BLUE, A_NORMAL);
-    init_pair(2, COLOR_GREEN, A_NORMAL);
-    init_pair(3, COLOR_RED, A_NORMAL);
-    init_pair(4, COLOR_CYAN, A_NORMAL);
-    init_pair(5, COLOR_MAGENTA, A_NORMAL);
-    init_pair(6, COLOR_YELLOW, A_NORMAL);
-    init_pair(7, COLOR_WHITE, A_NORMAL);
-    init_pair(8, COLOR_BLACK, COLOR_RED);
+    void initalize_colors();
 
     // Enable the use of arrow keys
     keypad(stdscr, TRUE);
