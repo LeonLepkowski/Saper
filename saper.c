@@ -41,7 +41,7 @@ void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], in
     }
 }
 
-void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim, int sap[MAX_ROWS][MAX_COLS])
+void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim)
 {
     clear();
 
@@ -60,9 +60,9 @@ void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int
                 if(board[i][j] == '@') attron(COLOR_PAIR(9));
             }
             if (slim == 0) {
-                colors(board, i, j, sap);
+                colors(board, i, j);
             } else {
-                colors_slim(board, i, j, sap);
+                colors_slim(board, i, j);
             }
             if (i == row && j == col) {
                 attroff(A_STANDOUT);
@@ -74,7 +74,7 @@ void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int
     printw("\n");
 }
 
-void update_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS], int rows, int cols, int* row, int* col, char action)
+void update_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS], int* row, int* col, char action)
 {
     if (action == 'f' && board[*row][*col] == '+') {
         board[*row][*col] = 'F';
@@ -105,9 +105,9 @@ void gen(int i, int j, int sap[MAX_ROWS][MAX_COLS]) // Dodaje 1 wszystkim polom 
         sap[i][j - 1] += 1;
 }
 
-int czy_koniec(int b_flagi, char board[MAX_ROWS][MAX_COLS]) // Zlicza wyświetlone miejsca
+int czy_koniec(char board[MAX_ROWS][MAX_COLS]) // Zlicza wyświetlone miejsca
 {
-    b_flagi = 0;
+    int b_flagi = 0;
     for (int i = 0; i < MAX_ROWS; ++i) {
         for (int j = 0; j < MAX_COLS; ++j) {
             if (board[i][j] >= '0' && board[i][j] < 9 + '0') {
@@ -151,7 +151,7 @@ bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX
     return false;
 }
 
-void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS])
+void colors(char board[MAX_ROWS][MAX_COLS], int i, int j)
 {
     if (board[i][j] == '1') {
         attron(COLOR_PAIR(1));
@@ -195,7 +195,7 @@ void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_
         printw(" %c", board[i][j]);
 }
 
-void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS])
+void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j)
 {
     if (board[i][j] == '1') {
         attron(COLOR_PAIR(1));
@@ -239,7 +239,7 @@ void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS]
         printw("%c", board[i][j]);
 }
 
-void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MAX_COLS], int rows, int cols)
+void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int rows, int cols)
 {
     sap[i][j] = 0;
     if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && sap[i + 1][j + 1] != 9)
@@ -277,7 +277,6 @@ void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MA
         sap[i][j] += 1;
 
     int mines_placed = 0;
-    int row, col;
     while (mines_placed < 1) {
         int row = rand() % rows;
         int col = rand() % cols;

@@ -28,7 +28,6 @@ int main(int argc, char* argv[])
     int rows = MAX_ROWS;
     int cols = MAX_COLS;
     int mines = MINES;
-    int b_flagi;
     int sap[MAX_ROWS][MAX_COLS];
     int to[MAX_ROWS][MAX_COLS];
     int row, col;
@@ -37,7 +36,7 @@ int main(int argc, char* argv[])
     getyx(stdscr, row, col);
 
     while (1 != 0) {
-        draw_board(board, rows, cols, row, col, slim, sap);
+        draw_board(board, rows, cols, row, col, slim);
 
         int action = wgetch(stdscr);
 
@@ -52,19 +51,19 @@ int main(int argc, char* argv[])
         }
 
         if (uncovered(board) == 0 && action == ' ' && sap[row][col] == 9) {
-            zero_move(row, col, sap, board, rows, cols);
+            zero_move(row, col, sap, rows, cols);
         }
 
         if (action == ' ' && sprawdz(row, col, sap, board)) {
-            draw_board(board, rows, cols, row, col, slim, sap);
+            draw_board(board, rows, cols, row, col, slim);
             gameover();
             end();
             return 0;
         }
-        update_board(board, sap, to, rows, cols, &row, &col, action);
+        update_board(board, sap, to, &row, &col, action);
 
-        if (czy_koniec(b_flagi, board) == MAX_COLS * MAX_ROWS - MINES) {
-            draw_board(board, rows, cols, row, col, slim, sap);
+        if (czy_koniec(board) == MAX_COLS * MAX_ROWS - MINES) {
+            draw_board(board, rows, cols, row, col, slim);
             win();
             end();
             return 0;

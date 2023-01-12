@@ -14,7 +14,7 @@ Controls:
 
 To run file type in terminal:
 
-gcc -w saper.c main.c -o main -lncurses
+gcc main.c saper.c -o main -std=c11 -Wall -Wextra -Werror -xc -lncurses
 
 ./main hight width mines
 
