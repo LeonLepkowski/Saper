@@ -5,6 +5,8 @@
 
 int main(int argc, char* argv[])
 {
+    fprintf(stderr, "Beginning of the main function!\n");
+
     MAX_ROWS = strtol(argv[1], NULL, 10);
     MAX_COLS = strtol(argv[2], NULL, 10);
     MINES = strtol(argv[3], NULL, 10);
@@ -13,7 +15,11 @@ int main(int argc, char* argv[])
         if (strcmp(argv[4], "--slim") == 0)
             slim = 1;
 
+    fprintf(stderr, "Starting!\n");
+
     start(MAX_ROWS, MAX_COLS, MINES);
+
+    fprintf(stderr, "Started!\n");
 
     // Seed the random number generator
     srand(time(0));
