@@ -228,7 +228,8 @@ void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_
         attron(COLOR_PAIR(8));
         printw(" @");
         attroff(COLOR_PAIR(8));
-    } else printw(" %c", board[i][j]);
+    } else
+        printw(" %c", board[i][j]);
 }
 
 void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS])
@@ -271,7 +272,8 @@ void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS]
         attron(COLOR_PAIR(8));
         printw("@");
         attroff(COLOR_PAIR(8));
-    } else printw("%c", board[i][j]);
+    } else
+        printw("%c", board[i][j]);
 }
 
 void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MAX_COLS], int rows, int cols)
