@@ -2,6 +2,11 @@
 
 int MAX_ROWS, MAX_COLS, MINES;
 
+void gen(int i, int j, int sap[MAX_ROWS][MAX_COLS]);
+void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS]);
+void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS]);
+void saper(int a, int b, char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS]);
+
 void start(int a, int b, int c)
 {
     MAX_ROWS = a;
