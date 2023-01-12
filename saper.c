@@ -1,9 +1,6 @@
 #include "saper.h"
 
-void gen(int i, int j, int sap[MAX_ROWS][MAX_COLS]);
-void saper(int a, int b, char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS]);
-void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS]);
-void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS]);
+int MAX_ROWS, MAX_COLS, MINES;
 
 void start(int a, int b, int c)
 {
@@ -54,9 +51,6 @@ void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int
     }
     printw("\n");
 
-void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int rows, int cols, int mines)
-{
-    // Initialize the board to all blank spaces
     for (int i = 0; i < rows; i++) {
         printw(" ");
 
