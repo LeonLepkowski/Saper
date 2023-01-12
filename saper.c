@@ -352,3 +352,25 @@ void initialize_colors()
     init_pair(7, COLOR_WHITE, A_NORMAL);
     init_pair(8, COLOR_BLACK, COLOR_RED);
 }
+
+void end()
+{
+    printw("Press any key to exit...\n");
+    getch();
+    endwin();
+}
+
+bool too_much_bombs(int MAX_ROWS, int MAX_COLS, int MINES)
+{
+    if (MINES >= MAX_COLS * MAX_ROWS) {
+        printw("TOO MUCH BOMBS\n\n");
+        // Wait for the user to press a key before exiting
+        printw("Press any key to exit...\n");
+        getch();
+
+        // Clean up ncursed
+        endwin();
+        return TRUE;
+    }
+    return FALSE;
+}

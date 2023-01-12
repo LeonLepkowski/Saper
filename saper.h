@@ -18,3 +18,5 @@ void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS]
 void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MAX_COLS], int rows, int cols);
 int uncovered(char board[MAX_ROWS][MAX_COLS]);
 void initialize_colors();
+void end();
+bool too_much_bombs(int MAX_ROWS, int MAX_COLS, int MINES);
