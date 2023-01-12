@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     }
 
     // Iinitialize colors
-    void initalize_colors();
+    initalize_colors();
 
     // Enable the use of arrow keys
     keypad(stdscr, TRUE);
