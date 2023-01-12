@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+
 int MAX_ROWS, MAX_COLS, MINES;
 
 void start(int a, int b, int c);
