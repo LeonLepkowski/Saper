@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    // Iinitialize colors
-    initalize_colors();
+    // Initialize colors
+    initialize_colors();
 
     // Enable the use of arrow keys
     keypad(stdscr, TRUE);
