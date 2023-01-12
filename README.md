@@ -16,9 +16,9 @@ To run file type in terminal:
 
 gcc -w saper.c main.c -o main -lncurses
 
-./main h w m
+./main hight width mines
 
->h stands for hight, w stands for width and m stands for number of mines
+>You can also add --slim so your game will be narrow
 
 <br />
 <br />
