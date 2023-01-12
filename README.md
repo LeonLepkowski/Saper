@@ -14,9 +14,11 @@ Controls:
 
 To run file type in terminal:
 
->gcc -w saper.c main.c -o main -lncurses
+gcc -w saper.c main.c -o main -lncurses
 
->./main 20 20 100
+./main h w m
+
+>h stands for hight, w stands for width and m stands for number of mines
 
 <br />
 <br />
