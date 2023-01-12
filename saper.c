@@ -2,32 +2,6 @@
 
 int MAX_ROWS, MAX_COLS, MINES;
 
-void gameover()
-{
-    printw("\n\n\n\n");
-    printw(":::    ::: ::::::::  ::::    ::: ::::::::::: :::::::::: ::::::::        ::::::::  :::::::::  :::   ::: \n");
-    printw(":+:   :+: :+:    :+: :+:+:   :+:     :+:     :+:       :+:    :+:      :+:    :+: :+:    :+: :+:   :+: \n");
-    printw("+:+  +:+  +:+    +:+ :+:+:+  +:+     +:+     +:+       +:+             +:+        +:+    +:+  +:+ +:+  \n");
-    printw("+#++:++   +#+    +:+ +#+ +:+ +#+     +#+     +#++:++#  +#+             :#:        +#++:++#:    +#++:   \n");
-    printw("+#+  +#+  +#+    +#+ +#+  +#+#+#     +#+     +#+       +#+             +#+   +#+# +#+    +#+    +#+    \n");
-    printw("#+#   #+# #+#    #+# #+#   #+#+#     #+#     #+#       #+#    #+#      #+#    #+# #+#    #+#    #+#    \n");
-    printw("###    ### ########  ###    #### ########### ########## ########        ########  ###    ###    ###    \n");
-    printw("\n\n\n");
-}
-
-void win()
-{
-    printw("\n\n\n\n");
-    printw(":::       ::: :::   :::  ::::::::  :::::::::      :::     ::::    :::     :::     \n");
-    printw(":+:       :+: :+:   :+: :+:    :+: :+:    :+:   :+: :+:   :+:+:   :+:   :+: :+:   \n");
-    printw("+:+       +:+  +:+ +:+  +:+        +:+    +:+  +:+   +:+  :+:+:+  +:+  +:+   +:+  \n");
-    printw("+#+  +:+  +#+   +#++:   :#:        +#++:++#:  +#++:++#++: +#+ +:+ +#+ +#++:++#++: \n");
-    printw("+#+ +#+#+ +#+    +#+    +#+   +#+# +#+    +#+ +#+     +#+ +#+  +#+#+# +#+     +#+ \n");
-    printw(" #+#+# #+#+#     #+#    #+#    #+# #+#    #+# #+#     #+# #+#   #+#+# #+#     #+# \n");
-    printw("  ###   ###      ###     ########  ###    ### ###     ### ###    #### ###     ### \n");
-    printw("\n\n\n");
-}
-
 void start(int a, int b, int c)
 {
     MAX_ROWS = a;
@@ -35,9 +9,8 @@ void start(int a, int b, int c)
     MINES = c;
 }
 
-void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int rows, int cols, int mines)
+void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS], int rows, int cols, int mines)
 {
-    // Initialize the board to all blank spaces
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             board[i][j] = '+';
@@ -50,7 +23,12 @@ void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], in
         }
     }
 
-    // Place the mines on the board
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            to[i][j] = 0;
+        }
+    }
+
     int mines_placed = 0;
     while (mines_placed < mines) {
         int row = rand() % rows;
@@ -65,39 +43,32 @@ void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], in
 
 void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim, int sap[MAX_ROWS][MAX_COLS])
 {
-    // Clear the screen
     clear();
 
-    // Draw the top row of column numbers
     printw(" ");
     for (int i = 0; i < cols; i++) {
         printw("  ");
     }
     printw("\n");
 
-    // Draw the board
     for (int i = 0; i < rows; i++) {
-        // Draw the row number
         printw(" ");
 
-        // Draw the cells in the row
         for (int j = 0; j < cols; j++) {
-            // Highlight the current cell
             if (i == row && j == col) {
                 attron(A_STANDOUT);
+                if(board[i][j] == '@') attron(COLOR_PAIR(9));
             }
             if (slim == 0) {
                 colors(board, i, j, sap);
             } else {
                 colors_slim(board, i, j, sap);
             }
-            // Turn off cell highlighting
             if (i == row && j == col) {
                 attroff(A_STANDOUT);
+                if(board[i][j] == '@') attroff(COLOR_PAIR(9));
             }
         }
-
-        // Move to the next line
         printw("\n");
     }
     printw("\n");
@@ -105,15 +76,11 @@ void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int
 
 void update_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS], int rows, int cols, int* row, int* col, char action)
 {
-    // Flag the current cell
     if (action == 'f' && board[*row][*col] == '+') {
         board[*row][*col] = 'F';
     } else if (action == 'f' && board[*row][*col] == 'F') {
         board[*row][*col] = '+';
-    }
-
-    // Reveal the current cell
-    if (action == ' ' && board[*row][*col] != 'F') {
+    } else if (action == ' ' && board[*row][*col] != 'F') {
         saper(*row, *col, board, sap, to);
     }
 }
@@ -155,25 +122,22 @@ void saper(int a, int b, char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_C
 {
     int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
     for (int k = 0; k < 16; k += 2) {
-        if (a + p[k] >= 0 && a + p[k] < MAX_ROWS && b + p[k + 1] >= 0 && b + p[k + 1] < MAX_COLS) // jesli miesci sie to miejsce
-        {
-            if (board[a + p[k]][b + p[k + 1]] == '+') // jesli pole != 9 i wpisane *
-            {
-                if (sap[a + p[k]][b + p[k + 1]] == 0 && to[a + p[k]][b + p[k + 1]] == 0) // jesli 0 i "nowe"
-                {
-                    to[a + p[k]][b + p[k + 1]] = 1; // ustaw a "stare"
-                    saper(a + p[k], b + p[k + 1], board, sap, to); // odslon pola obok
+        if (a + p[k] >= 0 && a + p[k] < MAX_ROWS && b + p[k + 1] >= 0 && b + p[k + 1] < MAX_COLS) {
+            if (board[a + p[k]][b + p[k + 1]] == '+') {
+                if (sap[a + p[k]][b + p[k + 1]] == 0 && to[a + p[k]][b + p[k + 1]] == 0) {
+                    to[a + p[k]][b + p[k + 1]] = 1;
+                    saper(a + p[k], b + p[k + 1], board, sap, to);
                 }
                 if (board[a + p[k]][b + p[k + 1]] != 'F' && sap[a][b] == 0) {
-                    board[a + p[k]][b + p[k + 1]] = sap[a + p[k]][b + p[k + 1]] + '0'; // odslaniam dane pole (liczba)
+                    board[a + p[k]][b + p[k + 1]] = sap[a + p[k]][b + p[k + 1]] + '0';
                 }
             }
         }
     }
-    board[a][b] = sap[a][b] + '0'; // oslaniam pole rozpoczecia
+    board[a][b] = sap[a][b] + '0';
 }
 
-bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS]) // Sprawsza czy użytkownik trafił w bombę
+bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS])
 {
     if (sap[a][b] == 9 && board[a][b] != 'F') {
         for (int i = 0; i < MAX_ROWS; i++) {
@@ -277,7 +241,7 @@ void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS]
 
 void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MAX_COLS], int rows, int cols)
 {
-    // Substracts 1 from all 8 surrounding blocks if they are not 9's
+    sap[i][j] = 0;
     if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && sap[i + 1][j + 1] != 9)
         sap[i + 1][j + 1] -= 1;
     if (i - 1 >= 0 && j - 1 >= 0 && sap[i - 1][j - 1] != 9)
@@ -295,9 +259,6 @@ void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int board[MAX_ROWS][MA
     if (j - 1 >= 0 && sap[i][j - 1] != 9)
         sap[i][j - 1] -= 1;
 
-    sap[i][j] = 0;
-
-    // For every 9 around adds 1 to main block
     if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && sap[i + 1][j + 1] == 9)
         sap[i][j] += 1;
     if (i - 1 >= 0 && j - 1 >= 0 && sap[i - 1][j - 1] == 9)
@@ -350,7 +311,7 @@ void initialize_colors()
     init_pair(5, COLOR_MAGENTA, A_NORMAL);
     init_pair(6, COLOR_YELLOW, A_NORMAL);
     init_pair(7, COLOR_WHITE, A_NORMAL);
-    init_pair(8, COLOR_BLACK, COLOR_RED);
+    init_pair(8, COLOR_RED, A_NORMAL);
 }
 
 void end()
@@ -363,14 +324,37 @@ void end()
 bool too_much_bombs(int MAX_ROWS, int MAX_COLS, int MINES)
 {
     if (MINES >= MAX_COLS * MAX_ROWS) {
-        printw("TOO MUCH BOMBS\n\n");
-        // Wait for the user to press a key before exiting
-        printw("Press any key to exit...\n");
+        printf("TOO MUCH BOMBS!, TRY VALUE OF MINES LOWER THAN %i...\n\n", MAX_COLS * MAX_ROWS);
+
         getch();
 
-        // Clean up ncursed
-        endwin();
         return TRUE;
     }
     return FALSE;
+}
+
+void gameover()
+{
+    printw("\n\n\n\n");
+    printw(":::    ::: ::::::::  ::::    ::: ::::::::::: :::::::::: ::::::::        ::::::::  :::::::::  :::   ::: \n");
+    printw(":+:   :+: :+:    :+: :+:+:   :+:     :+:     :+:       :+:    :+:      :+:    :+: :+:    :+: :+:   :+: \n");
+    printw("+:+  +:+  +:+    +:+ :+:+:+  +:+     +:+     +:+       +:+             +:+        +:+    +:+  +:+ +:+  \n");
+    printw("+#++:++   +#+    +:+ +#+ +:+ +#+     +#+     +#++:++#  +#+             :#:        +#++:++#:    +#++:   \n");
+    printw("+#+  +#+  +#+    +#+ +#+  +#+#+#     +#+     +#+       +#+             +#+   +#+# +#+    +#+    +#+    \n");
+    printw("#+#   #+# #+#    #+# #+#   #+#+#     #+#     #+#       #+#    #+#      #+#    #+# #+#    #+#    #+#    \n");
+    printw("###    ### ########  ###    #### ########### ########## ########        ########  ###    ###    ###    \n");
+    printw("\n\n\n");
+}
+
+void win()
+{
+    printw("\n\n\n\n");
+    printw(":::       ::: :::   :::  ::::::::  :::::::::      :::     ::::    :::     :::     \n");
+    printw(":+:       :+: :+:   :+: :+:    :+: :+:    :+:   :+: :+:   :+:+:   :+:   :+: :+:   \n");
+    printw("+:+       +:+  +:+ +:+  +:+        +:+    +:+  +:+   +:+  :+:+:+  +:+  +:+   +:+  \n");
+    printw("+#+  +:+  +#+   +#++:   :#:        +#++:++#:  +#++:++#++: +#+ +:+ +#+ +#++:++#++: \n");
+    printw("+#+ +#+#+ +#+    +#+    +#+   +#+# +#+    +#+ +#+     +#+ +#+  +#+#+# +#+     +#+ \n");
+    printw(" #+#+# #+#+#     #+#    #+#    #+# #+#    #+# #+#     #+# #+#   #+#+# #+#     #+# \n");
+    printw("  ###   ###      ###     ########  ###    ### ###     ### ###    #### ###     ### \n");
+    printw("\n\n\n");
 }

@@ -8,18 +8,17 @@ int main(int argc, char* argv[])
     MAX_ROWS = strtol(argv[1], NULL, 10);
     MAX_COLS = strtol(argv[2], NULL, 10);
     MINES = strtol(argv[3], NULL, 10);
+
+    start(MAX_ROWS, MAX_COLS, MINES);
+    if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
+        return 0;
+
     int slim = 0;
     if (argc == 5)
         if (strcmp(argv[4], "--slim") == 0)
             slim = 1;
 
-    start(MAX_ROWS, MAX_COLS, MINES);
-
-    // Initialize ncursed
     initscr();
-    curs_set(0);
-    if(too_much_bombs(MAX_ROWS, MAX_COLS, MINES)) return 0;
-
     curs_set(0);
     initialize_colors();
     keypad(stdscr, TRUE);
@@ -33,16 +32,10 @@ int main(int argc, char* argv[])
     int sap[MAX_ROWS][MAX_COLS];
     int to[MAX_ROWS][MAX_COLS];
     int row, col;
-
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            to[i][j] = 0;
-        }
-    }
-
-    setup_board(board, sap, rows, cols, mines);
-
+    
+    setup_board(board, sap, to, rows, cols, mines);
     getyx(stdscr, row, col);
+
     while (1 != 0) {
         draw_board(board, rows, cols, row, col, slim, sap);
 
