@@ -17,11 +17,11 @@ int main(int argc, char* argv[])
     start(MAX_ROWS, MAX_COLS, MINES);
 
     // Seed the random number generator
-    srand(time(0));
+    srand(time(FALSE));
 
     // Initialize ncursed
     initscr();
-
+    curs_set(0);
     if (MINES >= MAX_COLS * MAX_ROWS) {
         printw("TOO MUCH BOMBS\n\n");
         // Wait for the user to press a key before exiting
@@ -44,7 +44,6 @@ int main(int argc, char* argv[])
     int rows = MAX_ROWS;
     int cols = MAX_COLS;
     int mines = MINES;
-    int move = 0;
 
     int b_flagi;
     int sap[MAX_ROWS][MAX_COLS];
@@ -63,12 +62,9 @@ int main(int argc, char* argv[])
 
     getyx(stdscr, row, col);
     while (1 != 0) {
-        move = uncovered(board);
+
         // Draw the board
         draw_board(board, rows, cols, row, col, slim, sap);
-
-        // Get the user's action
-        printw("Enter action (' ' = reveal, f = mark as mine, arrow keys = move cursor): ");
 
         int action = wgetch(stdscr);
 
@@ -83,15 +79,15 @@ int main(int argc, char* argv[])
             row++;
         }
 
-        if (action == ' ' && sap[row][col] == 9 && move == 0) {
+        if (action == ' ' && sap[row][col] == 9 && uncovered(board) == 0) {
             zero_move(row, col, sap, board, rows, cols);
-            move = 1;
         }
 
         // Update the board
         if (action == ' ') {
             if (sprawdz(row, col, sap, board)) {
                 draw_board(board, rows, cols, row, col, slim, sap);
+                gameover();
                 // Wait for the user to press a key before exiting
                 printw("Press any key to exit...\n");
                 getch();
@@ -104,7 +100,7 @@ int main(int argc, char* argv[])
         update_board(board, sap, to, rows, cols, &row, &col, action);
         if (czy_koniec(b_flagi, board) == MAX_COLS * MAX_ROWS - MINES) {
             draw_board(board, rows, cols, row, col, slim, sap);
-            wygrana();
+            win();
             // Wait for the user to press a key before exiting
             printw("Press any key to exit...\n");
             getch();

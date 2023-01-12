@@ -2,7 +2,7 @@
 
 int MAX_ROWS, MAX_COLS, MINES;
 
-void GameOver()
+void gameover()
 {
     printw("\n\n\n\n");
     printw(":::    ::: ::::::::  ::::    ::: ::::::::::: :::::::::: ::::::::        ::::::::  :::::::::  :::   ::: \n");
@@ -15,7 +15,7 @@ void GameOver()
     printw("\n\n\n");
 }
 
-void wygrana()
+void win()
 {
     printw("\n\n\n\n");
     printw(":::       ::: :::   :::  ::::::::  :::::::::      :::     ::::    :::     :::     \n");
@@ -176,7 +176,6 @@ void saper(int a, int b, char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_C
 bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS]) // Sprawsza czy użytkownik trafił w bombę
 {
     if (sap[a][b] == 9 && board[a][b] != 'F') {
-        GameOver();
         for (int i = 0; i < MAX_ROWS; i++) {
             for (int j = 0; j < MAX_COLS; j++) {
                 if (sap[i][j] == 9)
