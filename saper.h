@@ -20,3 +20,5 @@ int uncovered(char board[MAX_ROWS][MAX_COLS]);
 bool too_much_bombs(int MAX_ROWS, int MAX_COLS, int MINES);
 void initialize_colors();
 void end();
+void gameover();
+void win();
