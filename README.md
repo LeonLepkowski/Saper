@@ -14,9 +14,9 @@ Controls:
 
 To run file type in terminal:
 
->gcc -w saper.c -o main -lncurses
+>gcc -w saper.c main.c -o main -lncurses
 
->./main 20 20 398
+>./main 20 20 100
 
 <br />
 <br />
