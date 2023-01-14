@@ -65,6 +65,16 @@ int main(int argc, char* argv[])
             end();
             return 0;
         }
+
+        if (action == ' ' && board[row][col] > '0' && board[row][col] < 9 + '0') {
+            if(new_function(board, sap, row, col, to)) {
+                draw_board(board, rows, cols, row, col, slim, sap);
+                gameover();
+                end();
+                return 0;
+            }
+        }
+
         update_board(board, sap, to, &row, &col, action);
 
         if (czy_koniec(board) == MAX_COLS * MAX_ROWS - MINES) {
@@ -73,5 +83,17 @@ int main(int argc, char* argv[])
             end();
             return 0;
         }
+
+        // for (int i = 0; i < rows; i++) {
+        //     for (int j = 0; j < cols; j++) {
+        //         if(board[i][j] == '9')
+        //         {
+        //             draw_board(board, rows, cols, i, j, slim, sap);
+        //             gameover();
+        //             end();
+        //             return 0;
+        //         }
+        //     }
+        // }
     }
 }

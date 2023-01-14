@@ -72,6 +72,8 @@ void update_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], i
         board[*row][*col] = 'F';
     } else if (action == 'f' && board[*row][*col] == 'F') {
         board[*row][*col] = '+';
+    // } else if (action == ' ' && board[*row][*col] >= '0' && board[*row][*col] < 9 + '0') {
+    //     new_function(board, sap, *row, *col, to);
     } else if (action == ' ' && board[*row][*col] != 'F') {
         saper(*row, *col, board, sap, to);
     }
@@ -116,7 +118,7 @@ void saper(int a, int b, char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_C
             }
         }
     }
-    board[a][b] = sap[a][b] + '0';
+    if(board[a][b] != 'F') board[a][b] = sap[a][b] + '0';
 }
 
 bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS])
@@ -251,4 +253,23 @@ void win()
     printw(" #+#+# #+#+#     #+#    #+#    #+# #+#    #+# #+#     #+# #+#   #+#+# #+#     #+# \n");
     printw("  ###   ###      ###     ########  ###    ### ###     ### ###    #### ###     ### \n");
     printw("\n\n\n");
+}
+
+bool new_function(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int i, int j, int to[MAX_ROWS][MAX_COLS])
+{
+    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
+    int flags = 0;
+    for (int k = 0; k < 16; k += 2) {
+        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && board[i + p[k]][j + p[k + 1]] == 'F')
+            flags += 1;
+    }
+    if(flags == sap[i][j])
+    {
+        for (int k = 0; k < 16; k += 2) {
+        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0)
+            if(sprawdz(i + p[k], j + p[k + 1], sap, board)) return true;
+            saper(i +p[k], j + p[k + 1], board, sap, to);
+        }
+    }
+    return false;
 }
