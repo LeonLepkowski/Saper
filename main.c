@@ -83,17 +83,5 @@ int main(int argc, char* argv[])
             end();
             return 0;
         }
-
-        // for (int i = 0; i < rows; i++) {
-        //     for (int j = 0; j < cols; j++) {
-        //         if(board[i][j] == '9')
-        //         {
-        //             draw_board(board, rows, cols, i, j, slim, sap);
-        //             gameover();
-        //             end();
-        //             return 0;
-        //         }
-        //     }
-        // }
     }
 }
