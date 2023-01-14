@@ -1,13 +1,18 @@
 #include "saper.h"
-#include <ncurses.h>
-
-int MAX_ROWS, MAX_COLS, MINES;
 
 int main(int argc, char* argv[])
 {
-    MAX_ROWS = strtol(argv[1], NULL, 10);
-    MAX_COLS = strtol(argv[2], NULL, 10);
-    MINES = strtol(argv[3], NULL, 10);
+    char* a;
+    char* b;
+    char* c;
+    MAX_ROWS = strtol(argv[1], &a, 10);
+    MAX_COLS = strtol(argv[2], &b, 10);
+    MINES = strtol(argv[3], &c, 10);
+
+    if ((a == NULL) || (a[0] != '\0') || (b == NULL) || (b[0] != '\0') || (c == NULL) || (c[0] != '\0')) {
+        printf("You are writing garbage\n");
+        return 0;
+    }
 
     start(MAX_ROWS, MAX_COLS, MINES);
     if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
@@ -31,12 +36,12 @@ int main(int argc, char* argv[])
     int sap[MAX_ROWS][MAX_COLS];
     int to[MAX_ROWS][MAX_COLS];
     int row, col;
-    
+
     setup_board(board, sap, to, rows, cols, mines);
     getyx(stdscr, row, col);
 
     while (1 != 0) {
-        draw_board(board, rows, cols, row, col, slim);
+        draw_board(board, rows, cols, row, col, slim, sap);
 
         int action = wgetch(stdscr);
 
@@ -55,7 +60,7 @@ int main(int argc, char* argv[])
         }
 
         if (action == ' ' && sprawdz(row, col, sap, board)) {
-            draw_board(board, rows, cols, row, col, slim);
+            draw_board(board, rows, cols, row, col, slim, sap);
             gameover();
             end();
             return 0;
@@ -63,7 +68,7 @@ int main(int argc, char* argv[])
         update_board(board, sap, to, &row, &col, action);
 
         if (czy_koniec(board) == MAX_COLS * MAX_ROWS - MINES) {
-            draw_board(board, rows, cols, row, col, slim);
+            draw_board(board, rows, cols, row, col, slim, sap);
             win();
             end();
             return 0;

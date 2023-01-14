@@ -1,7 +1,5 @@
 #include "saper.h"
 
-int MAX_ROWS, MAX_COLS, MINES;
-
 void start(int a, int b, int c)
 {
     MAX_ROWS = a;
@@ -41,14 +39,10 @@ void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], in
     }
 }
 
-void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim)
+void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim, int sap[MAX_ROWS][MAX_COLS])
 {
     clear();
 
-    printw(" ");
-    for (int i = 0; i < cols; i++) {
-        printw("  ");
-    }
     printw("\n");
 
     for (int i = 0; i < rows; i++) {
@@ -57,16 +51,14 @@ void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int
         for (int j = 0; j < cols; j++) {
             if (i == row && j == col) {
                 attron(A_STANDOUT);
-                if(board[i][j] == '@') attron(COLOR_PAIR(9));
+                if (board[i][j] == '@')
+                    attron(COLOR_PAIR(9));
             }
-            if (slim == 0) {
-                colors(board, i, j);
-            } else {
-                colors_slim(board, i, j);
-            }
+            colors(board, i, j, sap, slim);
             if (i == row && j == col) {
                 attroff(A_STANDOUT);
-                if(board[i][j] == '@') attroff(COLOR_PAIR(9));
+                if (board[i][j] == '@')
+                    attroff(COLOR_PAIR(9));
             }
         }
         printw("\n");
@@ -87,22 +79,12 @@ void update_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], i
 
 void gen(int i, int j, int sap[MAX_ROWS][MAX_COLS]) // Dodaje 1 wszystkim polom na około współrzędej (x,y)
 {
-    if (sap[i + 1][j + 1] != 9 && i + 1 < MAX_ROWS && j + 1 < MAX_COLS)
-        sap[i + 1][j + 1] += 1;
-    if (sap[i - 1][j - 1] != 9 && i - 1 >= 0 && j - 1 >= 0)
-        sap[i - 1][j - 1] += 1;
-    if (sap[i - 1][j + 1] != 9 && i - 1 >= 0 && j + 1 < MAX_COLS)
-        sap[i - 1][j + 1] += 1;
-    if (sap[i + 1][j - 1] != 9 && i + 1 < MAX_ROWS && j - 1 >= 0)
-        sap[i + 1][j - 1] += 1;
-    if (sap[i + 1][j] != 9 && i + 1 < MAX_ROWS)
-        sap[i + 1][j] += 1;
-    if (sap[i][j + 1] != 9 && j + 1 < MAX_COLS)
-        sap[i][j + 1] += 1;
-    if (sap[i - 1][j] != 9 && i - 1 >= 0)
-        sap[i - 1][j] += 1;
-    if (sap[i][j - 1] != 9 && j - 1 >= 0)
-        sap[i][j - 1] += 1;
+    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
+
+    for (int k = 0; k < 16; k += 2) {
+        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && sap[i + p[k]][j + p[k + 1]] != 9)
+            sap[i + p[k]][j + p[k + 1]] += 1;
+    }
 }
 
 int czy_koniec(char board[MAX_ROWS][MAX_COLS]) // Zlicza wyświetlone miejsca
@@ -151,130 +133,43 @@ bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX
     return false;
 }
 
-void colors(char board[MAX_ROWS][MAX_COLS], int i, int j)
+void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS], int slim)
 {
-    if (board[i][j] == '1') {
-        attron(COLOR_PAIR(1));
-        printw(" %c", board[i][j]);
-        attroff(COLOR_PAIR(1));
-    } else if (board[i][j] == '2') {
-        attron(COLOR_PAIR(2));
-        printw(" %c", board[i][j]);
-        attroff(COLOR_PAIR(2));
-    } else if (board[i][j] == '3') {
-        attron(COLOR_PAIR(3));
-        printw(" %c", board[i][j]);
-        attroff(COLOR_PAIR(3));
-    } else if (board[i][j] == '4') {
-        attron(COLOR_PAIR(4));
-        printw(" %c", board[i][j]);
-        attroff(COLOR_PAIR(4));
-    } else if (board[i][j] == '5') {
-        attron(COLOR_PAIR(5));
-        printw(" %c", board[i][j]);
-        attroff(COLOR_PAIR(5));
-    } else if (board[i][j] == '6') {
-        attron(COLOR_PAIR(6));
-        printw(" %c", board[i][j]);
-        attroff(COLOR_PAIR(6));
-    } else if (board[i][j] == 'F') {
-        attron(COLOR_PAIR(6));
-        printw(" %c", board[i][j]);
-        attroff(COLOR_PAIR(6));
-    } else if (board[i][j] == '0') {
-        printw("  ");
-    } else if (board[i][j] == '8') {
-        printw(" %c", board[i][j]);
-    } else if (board[i][j] == '+') {
-        printw(" +");
-    } else if (board[i][j] == '@') {
-        attron(COLOR_PAIR(8));
-        printw(" @");
-        attroff(COLOR_PAIR(8));
-    } else
-        printw(" %c", board[i][j]);
-}
+    char a = ' ';
+    if (slim == 1)
+        a = '_';
 
-void colors_slim(char board[MAX_ROWS][MAX_COLS], int i, int j)
-{
-    if (board[i][j] == '1') {
-        attron(COLOR_PAIR(1));
-        printw("%c", board[i][j]);
-        attroff(COLOR_PAIR(1));
-    } else if (board[i][j] == '2') {
-        attron(COLOR_PAIR(2));
-        printw("%c", board[i][j]);
-        attroff(COLOR_PAIR(2));
-    } else if (board[i][j] == '3') {
-        attron(COLOR_PAIR(3));
-        printw("%c", board[i][j]);
-        attroff(COLOR_PAIR(3));
-    } else if (board[i][j] == '4') {
-        attron(COLOR_PAIR(4));
-        printw("%c", board[i][j]);
-        attroff(COLOR_PAIR(4));
-    } else if (board[i][j] == '5') {
-        attron(COLOR_PAIR(5));
-        printw("%c", board[i][j]);
-        attroff(COLOR_PAIR(5));
-    } else if (board[i][j] == '6') {
-        attron(COLOR_PAIR(6));
-        printw("%c", board[i][j]);
-        attroff(COLOR_PAIR(6));
+    if (board[i][j] == '1' || board[i][j] == '2' || board[i][j] == '3' || board[i][j] == '4' || board[i][j] == '5' || board[i][j] == '6' || board[i][j] == '7') {
+        attron(COLOR_PAIR(sap[i][j]));
+        printw("%c%c", a, board[i][j]);
+        attroff(COLOR_PAIR(sap[i][j]));
     } else if (board[i][j] == 'F') {
         attron(COLOR_PAIR(6));
-        printw("%c", board[i][j]);
+        printw("%c%c", a, board[i][j]);
         attroff(COLOR_PAIR(6));
     } else if (board[i][j] == '0') {
-        printw(" ");
+        printw(" %c", a);
     } else if (board[i][j] == '8') {
-        printw("%c", board[i][j]);
-    } else if (board[i][j] == '+') {
-        printw("+");
+        printw("%c%c", a, board[i][j]);
     } else if (board[i][j] == '@') {
         attron(COLOR_PAIR(8));
-        printw("@");
+        printw("%c@", a);
         attroff(COLOR_PAIR(8));
     } else
-        printw("%c", board[i][j]);
+        printw("%c%c", a, board[i][j]);
 }
 
 void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int rows, int cols)
 {
+    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
     sap[i][j] = 0;
-    if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && sap[i + 1][j + 1] != 9)
-        sap[i + 1][j + 1] -= 1;
-    if (i - 1 >= 0 && j - 1 >= 0 && sap[i - 1][j - 1] != 9)
-        sap[i - 1][j - 1] -= 1;
-    if (i - 1 >= 0 && j + 1 < MAX_COLS && sap[i - 1][j + 1] != 9)
-        sap[i - 1][j + 1] -= 1;
-    if (i + 1 < MAX_ROWS && j - 1 >= 0 && sap[i + 1][j - 1] != 9)
-        sap[i + 1][j - 1] -= 1;
-    if (i + 1 < MAX_ROWS && sap[i + 1][j] != 9)
-        sap[i + 1][j] -= 1;
-    if (j + 1 < MAX_COLS && sap[i][j + 1] != 9)
-        sap[i][j + 1] -= 1;
-    if (i - 1 >= 0 && sap[i - 1][j] != 9)
-        sap[i - 1][j] -= 1;
-    if (j - 1 >= 0 && sap[i][j - 1] != 9)
-        sap[i][j - 1] -= 1;
+    for (int k = 0; k < 16; k += 2) {
+        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && sap[i + p[k]][j + p[k + 1]] != 9)
+            sap[i + p[k]][j + p[k + 1]] -= 1;
 
-    if (i + 1 < MAX_ROWS && j + 1 < MAX_COLS && sap[i + 1][j + 1] == 9)
-        sap[i][j] += 1;
-    if (i - 1 >= 0 && j - 1 >= 0 && sap[i - 1][j - 1] == 9)
-        sap[i][j] += 1;
-    if (i - 1 >= 0 && j + 1 < MAX_COLS && sap[i - 1][j + 1] == 9)
-        sap[i][j] += 1;
-    if (i + 1 < MAX_ROWS && j - 1 >= 0 && sap[i + 1][j - 1] == 9)
-        sap[i][j] += 1;
-    if (i + 1 < MAX_ROWS && sap[i + 1][j] == 9)
-        sap[i][j] += 1;
-    if (j + 1 < MAX_COLS && sap[i][j + 1] == 9)
-        sap[i][j] += 1;
-    if (i - 1 >= 0 && sap[i - 1][j] == 9)
-        sap[i][j] += 1;
-    if (j - 1 >= 0 && sap[i][j - 1] == 9)
-        sap[i][j] += 1;
+        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && sap[i + p[k]][j + p[k + 1]] == 9)
+            sap[i][j] += 1;
+    }
 
     int mines_placed = 0;
     while (mines_placed < 1) {
