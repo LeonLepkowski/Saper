@@ -2,6 +2,15 @@
 
 int main(int argc, char* argv[])
 {
+
+    char* temp;
+    int slim = 0;
+    if (argc == 5) {
+        temp = input(argv);
+        if (strcmp(temp, "--slim") == 0)
+            slim = 1;
+    }
+
     char* a;
     char* b;
     char* c;
@@ -18,10 +27,6 @@ int main(int argc, char* argv[])
     if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
         return 0;
 
-    int slim = 0;
-    if (argc == 5)
-        if (strcmp(argv[4], "--slim") == 0)
-            slim = 1;
 
     initscr();
     curs_set(0);
@@ -67,7 +72,7 @@ int main(int argc, char* argv[])
         }
 
         if (action == ' ' && board[row][col] > '0' && board[row][col] < 9 + '0') {
-            if(new_function(board, sap, row, col, to)) {
+            if (new_function(board, sap, row, col, to)) {
                 draw_board(board, rows, cols, row, col, slim, sap);
                 gameover();
                 end();

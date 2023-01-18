@@ -23,3 +23,4 @@ void initialize_colors();
 void end();
 void win();
 void gameover();
+char* input(char* tab[]);

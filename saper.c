@@ -138,28 +138,28 @@ bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX
 
 void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS], int slim)
 {
-    char a = ' ';
+    char* a = " ";
     if (slim == 1)
-        a = '_';
+        a = "";
 
     if (board[i][j] == '1' || board[i][j] == '2' || board[i][j] == '3' || board[i][j] == '4' || board[i][j] == '5' || board[i][j] == '6' || board[i][j] == '7') {
         attron(COLOR_PAIR(sap[i][j]));
-        printw("%c%c", a, board[i][j]);
+        printw("%s%c", a, board[i][j]);
         attroff(COLOR_PAIR(sap[i][j]));
     } else if (board[i][j] == 'F') {
         attron(COLOR_PAIR(6));
-        printw("%c%c", a, board[i][j]);
+        printw("%s%c", a, board[i][j]);
         attroff(COLOR_PAIR(6));
     } else if (board[i][j] == '0') {
-        printw(" %c", a);
+        printw(" %s", a);
     } else if (board[i][j] == '8') {
-        printw("%c%c", a, board[i][j]);
+        printw("%s%c", a, board[i][j]);
     } else if (board[i][j] == '@') {
         attron(COLOR_PAIR(8));
-        printw("%c@", a);
+        printw("%s@", a);
         attroff(COLOR_PAIR(8));
     } else
-        printw("%c%c", a, board[i][j]);
+        printw("%s%c", a, board[i][j]);
 }
 
 void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int rows, int cols)
@@ -201,6 +201,7 @@ int uncovered(char board[MAX_ROWS][MAX_COLS])
 void initialize_colors()
 {
     start_color();
+    init_color(COLOR_BLUE, 140, 600, 900);
     init_pair(1, COLOR_BLUE, A_NORMAL);
     init_pair(2, COLOR_GREEN, A_NORMAL);
     init_pair(3, COLOR_RED, A_NORMAL);
@@ -274,4 +275,23 @@ bool new_function(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], i
         }
     }
     return false;
+}
+
+char* input(char* argv[])
+{
+    char* temp;
+    if (strcmp(argv[1], "--slim") == 0) {
+        temp = argv[1];
+        argv[1] = argv[2];
+        argv[2] = argv[3];
+        argv[3] = argv[4];
+    } else if (strcmp(argv[2], "--slim") == 0) {
+        temp = argv[2];
+        argv[2] = argv[3];
+        argv[3] = argv[4];
+    } else if (strcmp(argv[3], "--slim") == 0) {
+        temp = argv[3];
+        argv[3] = argv[4];
+    } else temp = argv[4];
+    return temp;
 }
