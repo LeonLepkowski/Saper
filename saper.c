@@ -26,17 +26,6 @@ void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], in
             to[i][j] = 0;
         }
     }
-
-    int mines_placed = 0;
-    while (mines_placed < mines) {
-        int row = rand() % rows;
-        int col = rand() % cols;
-        if (sap[row][col] != 9) {
-            sap[row][col] = 9;
-            gen(row, col, sap);
-            mines_placed++;
-        }
-    }
 }
 
 void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim, int sap[MAX_ROWS][MAX_COLS])
@@ -162,30 +151,6 @@ void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_
         printw("%s%c", a, board[i][j]);
 }
 
-void zero_move(int i, int j, int sap[MAX_ROWS][MAX_COLS], int rows, int cols)
-{
-    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
-    sap[i][j] = 0;
-    for (int k = 0; k < 16; k += 2) {
-        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && sap[i + p[k]][j + p[k + 1]] != 9)
-            sap[i + p[k]][j + p[k + 1]] -= 1;
-
-        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && sap[i + p[k]][j + p[k + 1]] == 9)
-            sap[i][j] += 1;
-    }
-
-    int mines_placed = 0;
-    while (mines_placed < 1) {
-        int row = rand() % rows;
-        int col = rand() % cols;
-        if (sap[row][col] != 9 && row != i && col != j) {
-            sap[row][col] = 9;
-            gen(row, col, sap);
-            mines_placed++;
-        }
-    }
-}
-
 int uncovered(char board[MAX_ROWS][MAX_COLS])
 {
     int index = 0;
@@ -292,6 +257,24 @@ char* input(char* argv[])
     } else if (strcmp(argv[3], "--slim") == 0) {
         temp = argv[3];
         argv[3] = argv[4];
-    } else temp = argv[4];
+    } else
+        temp = argv[4];
     return temp;
+}
+
+void bombs_generator(int i, int j, int sap[MAX_ROWS][MAX_COLS], int mines, int rows, int cols)
+{
+
+    int mines_placed = 0;
+    while (mines_placed < mines) {
+        int row = rand() % rows;
+        int col = rand() % cols;
+        if (row != i || col != j) {
+            if (sap[row][col] != 9) {
+                sap[row][col] = 9;
+                gen(row, col, sap);
+                mines_placed++;
+            }
+        }
+    }
 }

@@ -60,8 +60,8 @@ int main(int argc, char* argv[])
             row++;
         }
 
-        if (uncovered(board) == 0 && action == ' ' && sap[row][col] == 9) {
-            zero_move(row, col, sap, rows, cols);
+        if (uncovered(board) == 0 && action == ' ') {
+            bombs_generator(row, col, sap, mines, rows, cols);
         }
 
         if (action == ' ' && sprawdz(row, col, sap, board)) {
