@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     MAX_COLS = strtol(argv[2], &b, 10);
     MINES = strtol(argv[3], &c, 10);
 
-    if ((a == NULL) || (a[0] != '\0') || (b == NULL) || (b[0] != '\0') || (c == NULL) || (c[0] != '\0')) {
+    if ((a[0] != '\0') || (b[0] != '\0') || (c[0] != '\0')) {
         printf("You are writing garbage\n");
         return 0;
     }
