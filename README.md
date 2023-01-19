@@ -1,5 +1,5 @@
 # Saper game in C
-
+Minesweeper is a logic puzzle video game genre generally played on personal computers. The game features a grid of clickable squares, with hidden "mines" scattered throughout the board.
 
 ## Controls:
 
@@ -10,19 +10,20 @@
 * F key - flag current box
 
 <br />
-<br />
 
-## To run file type in terminal:
+## To compile file type in terminal:
 
 ```bash
    gcc main.c saper.c -o main -std=c11 -Wall -Wextra -Werror -xc -lncurses
 ```
+
+## To run it type:
 ```bash
 ./main hight width mines
 ```
+>Where instead of hight, widht and mines you are suppose to write nubers representing them
 >You can also add --slim so your game will be narrow
 
-<br />
 <br />
 
 ## Ncurses
