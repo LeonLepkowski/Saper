@@ -21,14 +21,14 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 ```bash
    ./main hight width mines
 ```
->Where instead of hight, widht and mines you are suppose to write nubers representing them.
+>Where instead of hight, widht and mines you are suppose to write numbers representing them.
 >You can also write --slim so your game will be narrow
 
 <br />
 
 ## Ncurses
 
-You also need to download ncurses library
+You also need to download ncurses library to compile the file
 
 ```bash
   sudo apt-get install libncurses5-dev libncursesw5-dev
