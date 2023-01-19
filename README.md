@@ -5,7 +5,7 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 
 * Arrow keys - move around map
 
-* Space - uncover current box
+* Space key - uncover current box
 
 * F key - flag current box
 
@@ -19,10 +19,10 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 
 ## To run it type:
 ```bash
-./main hight width mines
+   ./main hight width mines
 ```
->Where instead of hight, widht and mines you are suppose to write nubers representing them
->You can also add --slim so your game will be narrow
+>Where instead of hight, widht and mines you are suppose to write nubers representing them.
+>You can also write --slim so your game will be narrow
 
 <br />
 
