@@ -30,8 +30,7 @@ void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], in
 
 void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim, int sap[MAX_ROWS][MAX_COLS])
 {
-    clear();
-
+    erase();
     printw("\n");
 
     for (int i = 0; i < rows; i++) {

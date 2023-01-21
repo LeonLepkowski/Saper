@@ -27,7 +27,6 @@ int main(int argc, char* argv[])
     if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
         return 0;
 
-
     initscr();
     curs_set(0);
     initialize_colors();
