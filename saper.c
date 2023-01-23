@@ -1,130 +1,6 @@
 #include "saper.h"
 
-void start(int a, int b, int c)
-{
-    MAX_ROWS = a;
-    MAX_COLS = b;
-    MINES = c;
-}
-
-void setup_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS], int rows, int cols, int mines)
-{
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            board[i][j] = '+';
-        }
-    }
-
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            sap[i][j] = 0;
-        }
-    }
-
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            to[i][j] = 0;
-        }
-    }
-}
-
-void draw_board(char board[MAX_ROWS][MAX_COLS], int rows, int cols, int row, int col, int slim, int sap[MAX_ROWS][MAX_COLS])
-{
-    erase();
-    printw("\n");
-
-    for (int i = 0; i < rows; i++) {
-        printw(" ");
-
-        for (int j = 0; j < cols; j++) {
-            if (i == row && j == col) {
-                attron(A_STANDOUT);
-                if (board[i][j] == '@')
-                    attron(COLOR_PAIR(9));
-            }
-            colors(board, i, j, sap, slim);
-            if (i == row && j == col) {
-                attroff(A_STANDOUT);
-                if (board[i][j] == '@')
-                    attroff(COLOR_PAIR(9));
-            }
-        }
-        printw("\n");
-    }
-    printw("\n");
-}
-
-void update_board(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS], int* row, int* col, char action)
-{
-    if (action == 'f' && board[*row][*col] == '+') {
-        board[*row][*col] = 'F';
-    } else if (action == 'f' && board[*row][*col] == 'F') {
-        board[*row][*col] = '+';
-        // } else if (action == ' ' && board[*row][*col] >= '0' && board[*row][*col] < 9 + '0') {
-        //     new_function(board, sap, *row, *col, to);
-    } else if (action == ' ' && board[*row][*col] != 'F') {
-        saper(*row, *col, board, sap, to);
-    }
-}
-
-void gen(int i, int j, int sap[MAX_ROWS][MAX_COLS]) // Dodaje 1 wszystkim polom na około współrzędej (x,y)
-{
-    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
-
-    for (int k = 0; k < 16; k += 2) {
-        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && sap[i + p[k]][j + p[k + 1]] != 9)
-            sap[i + p[k]][j + p[k + 1]] += 1;
-    }
-}
-
-int czy_koniec(char board[MAX_ROWS][MAX_COLS]) // Zlicza wyświetlone miejsca
-{
-    int b_flagi = 0;
-    for (int i = 0; i < MAX_ROWS; ++i) {
-        for (int j = 0; j < MAX_COLS; ++j) {
-            if (board[i][j] >= '0' && board[i][j] < 9 + '0') {
-                b_flagi++;
-            }
-        }
-    }
-    return b_flagi;
-}
-
-void saper(int a, int b, char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int to[MAX_ROWS][MAX_COLS])
-{
-    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
-    for (int k = 0; k < 16; k += 2) {
-        if (a + p[k] >= 0 && a + p[k] < MAX_ROWS && b + p[k + 1] >= 0 && b + p[k + 1] < MAX_COLS) {
-            if (board[a + p[k]][b + p[k + 1]] == '+') {
-                if (sap[a + p[k]][b + p[k + 1]] == 0 && to[a + p[k]][b + p[k + 1]] == 0) {
-                    to[a + p[k]][b + p[k + 1]] = 1;
-                    saper(a + p[k], b + p[k + 1], board, sap, to);
-                }
-                if (board[a + p[k]][b + p[k + 1]] != 'F' && sap[a][b] == 0) {
-                    board[a + p[k]][b + p[k + 1]] = sap[a + p[k]][b + p[k + 1]] + '0';
-                }
-            }
-        }
-    }
-    if (board[a][b] != 'F')
-        board[a][b] = sap[a][b] + '0';
-}
-
-bool sprawdz(int a, int b, int sap[MAX_ROWS][MAX_COLS], char board[MAX_ROWS][MAX_COLS])
-{
-    if (sap[a][b] == 9 && board[a][b] != 'F') {
-        for (int i = 0; i < MAX_ROWS; i++) {
-            for (int j = 0; j < MAX_COLS; j++) {
-                if (sap[i][j] == 9)
-                    board[i][j] = '@';
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_COLS], int slim)
+void colors(char board[INDEX][INDEX], int i, int j, int sap[INDEX][INDEX], int slim)
 {
     char* a = " ";
     if (slim == 1)
@@ -150,7 +26,139 @@ void colors(char board[MAX_ROWS][MAX_COLS], int i, int j, int sap[MAX_ROWS][MAX_
         printw("%s%c", a, board[i][j]);
 }
 
-int uncovered(char board[MAX_ROWS][MAX_COLS])
+void saper(int a, int b, char board[INDEX][INDEX], int sap[INDEX][INDEX], int to[INDEX][INDEX], int MAX_ROWS, int MAX_COLS)
+{
+    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
+    if (sap[a][b] == 0) {
+        for (int k = 0; k < 16; k += 2) {
+            if (a + p[k] >= 0 && a + p[k] < MAX_ROWS && b + p[k + 1] >= 0 && b + p[k + 1] < MAX_COLS) {
+                if (board[a + p[k]][b + p[k + 1]] == '+') {
+                    if (sap[a + p[k]][b + p[k + 1]] == 0 && to[a + p[k]][b + p[k + 1]] == 0) {
+                        to[a + p[k]][b + p[k + 1]] = 1;
+                        saper(a + p[k], b + p[k + 1], board, sap, to, MAX_ROWS, MAX_COLS);
+                    }
+                    board[a + p[k]][b + p[k + 1]] = sap[a + p[k]][b + p[k + 1]] + '0';
+                }
+            }
+        }
+    }
+    if (board[a][b] != 'F')
+        board[a][b] = sap[a][b] + '0';
+}
+
+void setup_board(char board[INDEX][INDEX], int sap[INDEX][INDEX], int to[INDEX][INDEX], int rows, int cols)
+{
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            board[i][j] = '+';
+        }
+    }
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            sap[i][j] = 0;
+        }
+    }
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            to[i][j] = 0;
+        }
+    }
+}
+
+void draw_board(char board[INDEX][INDEX], int row, int col, int slim, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_COLS, int MINES)
+{
+    erase();
+
+    int flags = 0;
+    for (int i = 0; i < MAX_ROWS; i++) {
+        for (int j = 0; j < MAX_COLS; j++) {
+            if (board[i][j] == 'F')
+                flags += 1;
+        }
+    }
+    mvprintw(0, 2, "[%2i]\n", MINES - flags);
+    for (int i = 0; i < MAX_ROWS; i++) {
+        printw(" ");
+
+        for (int j = 0; j < MAX_COLS; j++) {
+            if (i == row && j == col) {
+                attron(A_STANDOUT);
+                if (board[i][j] == '@')
+                    attron(COLOR_PAIR(9));
+            }
+            colors(board, i, j, sap, slim);
+            if (i == row && j == col) {
+                attroff(A_STANDOUT);
+                if (board[i][j] == '@')
+                    attroff(COLOR_PAIR(9));
+            }
+        }
+        printw("\n");
+    }
+    printw("\n");
+}
+
+void update_board(char board[INDEX][INDEX], int sap[INDEX][INDEX], int to[INDEX][INDEX], int* row, int* col, char action, int MAX_ROWS, int MAX_COLS, int MINES)
+{
+    int flags = 0;
+    for (int i = 0; i < MAX_ROWS; i++) {
+        for (int j = 0; j < MAX_COLS; j++) {
+            if (board[i][j] == 'F')
+                flags += 1;
+        }
+    }
+
+    if (action == 'f' && board[*row][*col] == '+' && flags != MINES) {
+        board[*row][*col] = 'F';
+    } else if (action == 'f' && board[*row][*col] == 'F') {
+        board[*row][*col] = '+';
+        // } else if (action == ' ' && board[*row][*col] >= '0' && board[*row][*col] < 9 + '0') {
+        //     new_function(board, sap, *row, *col, to);
+    } else if (action == ' ' && board[*row][*col] != 'F') {
+        saper(*row, *col, board, sap, to, MAX_ROWS, MAX_COLS);
+    }
+}
+
+void gen(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_COLS)
+{
+    int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
+
+    for (int k = 0; k < 16; k += 2) {
+        if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0 && sap[i + p[k]][j + p[k + 1]] != 9)
+            sap[i + p[k]][j + p[k + 1]] += 1;
+    }
+}
+
+int czy_koniec(char board[INDEX][INDEX], int MAX_ROWS, int MAX_COLS)
+{
+    int b_flagi = 0;
+    for (int i = 0; i < MAX_ROWS; ++i) {
+        for (int j = 0; j < MAX_COLS; ++j) {
+            if (board[i][j] >= '0' && board[i][j] < 9 + '0') {
+                b_flagi++;
+            }
+        }
+    }
+    return b_flagi;
+}
+
+bool sprawdz(int a, int b, int sap[INDEX][INDEX], char board[INDEX][INDEX], int MAX_ROWS, int MAX_COLS)
+{
+    if (sap[a][b] == 9 && board[a][b] != 'F') {
+        for (int i = 0; i < MAX_ROWS; i++) {
+            for (int j = 0; j < MAX_COLS; j++) {
+                if (sap[i][j] == 9)
+                    board[i][j] = '@';
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+int uncovered(char board[INDEX][INDEX], int MAX_ROWS, int MAX_COLS)
 {
     int index = 0;
     for (int i = 0; i < MAX_ROWS; i++) {
@@ -178,15 +186,18 @@ void initialize_colors()
 
 void end()
 {
-    printw("Press any key to exit...\n");
-    getch();
+    int a = 0;
+    printw("Press ENTER to exit...\n");
+    while(a != '\n'){
+        a = getch();
+    }
     endwin();
 }
 
-bool too_much_bombs(int max_rows, int max_cols, int mines)
+bool too_much_bombs(int MAX_ROWS, int MAX_COLS, int MINES)
 {
-    if (mines >= max_cols * max_rows) {
-        printf("TOO MUCH BOMBS!, TRY VALUE OF MINES LOWER THAN %i...\n\n", max_cols * max_rows);
+    if (MINES >= MAX_ROWS * MAX_COLS) {
+        printf("TOO MUCH BOMBS!, TRY VALUE OF MINES LOWER THAN %i...\n\n", MAX_ROWS * MAX_COLS);
 
         getch();
 
@@ -221,7 +232,7 @@ void win()
     printw("\n\n\n");
 }
 
-bool new_function(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], int i, int j, int to[MAX_ROWS][MAX_COLS])
+bool new_function(char board[INDEX][INDEX], int sap[INDEX][INDEX], int i, int j, int to[INDEX][INDEX], int MAX_ROWS, int MAX_COLS)
 {
     int p[16] = { 1, 1, -1, -1, -1, 1, 1, -1, 1, 0, 0, 1, -1, 0, 0, -1 };
     int flags = 0;
@@ -232,9 +243,9 @@ bool new_function(char board[MAX_ROWS][MAX_COLS], int sap[MAX_ROWS][MAX_COLS], i
     if (flags == sap[i][j]) {
         for (int k = 0; k < 16; k += 2) {
             if (i + p[k] < MAX_ROWS && j + p[k + 1] < MAX_COLS && i + p[k] >= 0 && j + p[k + 1] >= 0) {
-                if (sprawdz(i + p[k], j + p[k + 1], sap, board))
+                if (sprawdz(i + p[k], j + p[k + 1], sap, board, MAX_ROWS, MAX_COLS))
                     return true;
-                saper(i + p[k], j + p[k + 1], board, sap, to);
+                saper(i + p[k], j + p[k + 1], board, sap, to, MAX_ROWS, MAX_COLS);
             }
         }
     }
@@ -261,17 +272,17 @@ char* input(char* argv[])
     return temp;
 }
 
-void bombs_generator(int i, int j, int sap[MAX_ROWS][MAX_COLS], int mines, int rows, int cols)
+void bombs_generator(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_COLS, int MINES)
 {
 
     int mines_placed = 0;
-    while (mines_placed < mines) {
-        int row = rand() % rows;
-        int col = rand() % cols;
+    while (mines_placed < MINES) {
+        int row = rand() % MAX_ROWS;
+        int col = rand() % MAX_COLS;
         if (row != i || col != j) {
             if (sap[row][col] != 9) {
                 sap[row][col] = 9;
-                gen(row, col, sap);
+                gen(row, col, sap, MAX_ROWS, MAX_COLS);
                 mines_placed++;
             }
         }

@@ -19,10 +19,10 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 
 ## To run it type:
 ```bash
-   ./main hight width mines
+   ./main [command]
 ```
->Where instead of hight, widht and mines you are suppose to write numbers representing them.
->You can also write --slim so your game will be narrow
+> There are 3 different difficulties: --beginner, --intermediate and --expert.
+> You can also use --custom, where you put 3 numbers after, which are width, hight and number of mines.
 
 <br />
 
