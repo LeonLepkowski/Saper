@@ -22,7 +22,7 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
    ./main [command]
 ```
 > There are 3 different difficulties: --beginner, --intermediate and --expert.
-> You can also use --custom, where you put 3 numbers after, which are width, hight and number of mines.
+> You can also use --custom, where you put 3 numbers, which are: width, hight and number of mines.
 
 <br />
 
