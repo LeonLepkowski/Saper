@@ -1,55 +1,7 @@
 #include "saper.h"
 
-int main(int argc, char* argv[])
+int main()
 {
-    int MAX_ROWS, MAX_COLS, MINES;
-    if(argc != 2 && argc != 5){
-        printf("Try again!\n");
-        return 0;
-    }
-
-    if (strcmp(argv[1], "--beginner") == 0) {
-        MAX_ROWS = 9;
-        MAX_COLS = 9;
-        MINES = 10;
-    }
-
-    if (strcmp(argv[1], "--intermediate") == 0) {
-        MAX_ROWS = 16;
-        MAX_COLS = 16;
-        MINES = 40;
-    }
-
-    if (strcmp(argv[1], "--expert") == 0) {
-        MAX_ROWS = 16;
-        MAX_COLS = 30;
-        MINES = 99;
-    }
-
-    if (strcmp(argv[1], "--custom") == 0) {
-        char* a;
-        char* b;
-        char* c;
-        MAX_ROWS = strtol(argv[2], &a, 10);
-        MAX_COLS = strtol(argv[3], &b, 10);
-        MINES = strtol(argv[4], &c, 10);
-        if ((a[0] != '\0') || (b[0] != '\0') || (c[0] != '\0')) {
-            printf("You are writing garbage\n");
-            return 0;
-        }
-    }
-
-    // char* temp;
-    int slim = 0;
-    // if (argc == 5) {
-    //     temp = input(argv);
-    //     if (strcmp(temp, "--slim") == 0)
-    //         slim = 1;
-    // }
-
-    if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
-        return 0;
-
     initscr();
     curs_set(0);
     noecho();
@@ -57,59 +9,144 @@ int main(int argc, char* argv[])
     keypad(stdscr, TRUE);
     srand(time(FALSE));
 
-    char board[INDEX][INDEX];
-    int sap[INDEX][INDEX];
-    int to[INDEX][INDEX];
-    int row, col;
+    int MAX_ROWS = 9, MAX_COLS = 9, MINES = 10;
 
-    setup_board(board, sap, to, MAX_ROWS, MAX_COLS);
-    getyx(stdscr, row, col);
+    int yMAX, xMAX;
+    getmaxyx(stdscr, yMAX, xMAX);
 
-    while (1 != 0) {
-        draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
+    WINDOW* menuwin = newwin(5, 12, yMAX / 2 - 5, xMAX / 2 - 5);
+    box(menuwin, 0, 0);
+    refresh();
+    wrefresh(menuwin);
 
-        int action = wgetch(stdscr);
+    keypad(menuwin, true);
+    char* choices[] = { "New game", "Options", "Exit game" };
+    int choice;
+    int highlight = 0;
+    int difficulty = 0;
 
-        if (action == KEY_LEFT) {
-            col--;
-            if(col == -1) col = MAX_COLS - 1;
-        } else if (action == KEY_RIGHT) {
-            col++;
-            if(col == MAX_COLS) col = 0;
-        } else if (action == KEY_UP) {
-            row--;
-            if(row == -1) row = MAX_ROWS - 1;
-        } else if (action == KEY_DOWN) {
-            row++;
-            if(row == MAX_COLS) row = 0;
+    while (1) {
+        while (1) {
+            while (1) {
+                box(menuwin, 0, 0);
+                title_name(xMAX);
+                for (int i = 0; i < 3; i++) {
+                    erase();
+                    // wrefresh(menuwin);
+                    if (i == highlight)
+                        wattron(menuwin, A_REVERSE);
+                    mvwprintw(menuwin, i + 1, 1, choices[i]);
+                    wattroff(menuwin, A_REVERSE);
+                }
+                choice = wgetch(menuwin);
+                switch (choice) {
+                case KEY_UP:
+                    highlight--;
+                    if (highlight == -1)
+                        highlight = 0;
+                    break;
+                case KEY_DOWN:
+                    highlight++;
+                    if (highlight == 3)
+                        highlight = 2;
+                    break;
+                default:
+                    break;
+                }
+                if (choice == 10)
+                    break;
+            }
+            printw("Your choice was: %s\n", choices[highlight]);
+
+            if (strcmp(choices[highlight], "Options") == 0) {
+                erase();
+                options(&MAX_ROWS, &MAX_COLS, &MINES, &difficulty);
+            }
+            refresh();
+            if (strcmp(choices[highlight], "Exit game") == 0) {
+                endwin();
+                return 0;
+            }
+
+            if (strcmp(choices[highlight], "New game") == 0) {
+                break;
+            }
         }
-        if (uncovered(board, MAX_ROWS, MAX_COLS) == 0 && (action == ' ' || action == 'f')) {
-            bombs_generator(row, col, sap, MAX_ROWS, MAX_COLS, MINES);
-        }
-
-        if (action == ' ' && sprawdz(row, col, sap, board, MAX_ROWS, MAX_COLS)) {
-            draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
-            gameover();
-            end();
+        erase();
+        if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
             return 0;
-        }
 
-        if (action == ' ' && board[row][col] > '0' && board[row][col] < 9 + '0') {
-            if (new_function(board, sap, row, col, to, MAX_ROWS, MAX_COLS)) {
+        char board[INDEX][INDEX];
+        int sap[INDEX][INDEX];
+        int to[INDEX][INDEX];
+        int row, col;
+        int slim = 0;
+
+        setup_board(board, sap, to, MAX_ROWS, MAX_COLS);
+        getyx(stdscr, row, col);
+
+        while (1 != 0) {
+            draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
+
+            int action = wgetch(stdscr);
+            if(action == 27) {
+                erase();
+                break;
+            }
+            if (action == KEY_LEFT) {
+                col--;
+                if (col == -1)
+                    col = MAX_COLS - 1;
+            } else if (action == KEY_RIGHT) {
+                col++;
+                if (col == MAX_COLS)
+                    col = 0;
+            } else if (action == KEY_UP) {
+                row--;
+                if (row == -1)
+                    row = MAX_ROWS - 1;
+            } else if (action == KEY_DOWN) {
+                row++;
+                if (row == MAX_COLS)
+                    row = 0;
+            }
+            if (uncovered(board, MAX_ROWS, MAX_COLS) == 0 && (action == ' ' || action == 'f')) {
+                bombs_generator(row, col, sap, MAX_ROWS, MAX_COLS, MINES);
+            }
+
+            if (action == ' ' && sprawdz(row, col, sap, board, MAX_ROWS, MAX_COLS)) {
                 draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
                 gameover();
                 end();
-                return 0;
+                clear();
+                erase();
+                break;
+                // return 0;
             }
-        }
 
-        update_board(board, sap, to, &row, &col, action, MAX_ROWS, MAX_COLS, MINES);
+            if (action == ' ' && board[row][col] > '0' && board[row][col] < 9 + '0') {
+                if (new_function(board, sap, row, col, to, MAX_ROWS, MAX_COLS)) {
+                    draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
+                    gameover();
+                    end();
+                    clear();
+                    erase();
+                    break;
+                    // return 0;
+                }
+            }
 
-        if (czy_koniec(board, MAX_ROWS, MAX_COLS) == MAX_COLS * MAX_ROWS - MINES) {
-            draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
-            win();
-            end();
-            return 0;
+            update_board(board, sap, to, &row, &col, action, MAX_ROWS, MAX_COLS, MINES);
+
+            if (czy_koniec(board, MAX_ROWS, MAX_COLS) == MAX_COLS * MAX_ROWS - MINES) {
+                draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
+                win();
+                end();
+                erase();
+                clear();
+                break;
+                // return 0;
+            }
         }
     }
 }

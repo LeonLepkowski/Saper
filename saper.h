@@ -21,3 +21,5 @@ void win();
 bool new_function(char board[INDEX][INDEX], int sap[INDEX][INDEX], int i, int j, int to[INDEX][INDEX], int MAX_ROWS, int MAX_COLS);
 char* input(char* argv[]);
 void bombs_generator(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_COLS, int MINES);
+void title_name(int xMAX);
+void options(int* MAX_ROWS, int* MAX_COLS, int* MINES, int* difficulty);
