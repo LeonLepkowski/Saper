@@ -107,7 +107,7 @@ int main()
                     row = MAX_ROWS - 1;
             } else if (action == KEY_DOWN) {
                 row++;
-                if (row == MAX_COLS)
+                if (row == MAX_ROWS)
                     row = 0;
             }
             if (uncovered(board, MAX_ROWS, MAX_COLS) == 0 && (action == ' ' || action == 'f')) {
