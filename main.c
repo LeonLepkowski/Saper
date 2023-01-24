@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
         MAX_ROWS = strtol(argv[2], &a, 10);
         MAX_COLS = strtol(argv[3], &b, 10);
         MINES = strtol(argv[4], &c, 10);
-        if ((a[0] != '\0') || (b[0] != '\0') || (c[0] != '\0')) {
+        if ((a[0] != '\0') || (b[0] != '\0') || (c[0] != '\0') || MAX_COLS <= 0 || MAX_ROWS <= 0 || MINES < 0) {
             printf("You are writing garbage\n");
             return 0;
         }
@@ -67,17 +67,17 @@ int main(int argc, char* argv[])
     int to[INDEX][INDEX];
     int row, col;
 
-    setup_board(board, sap, to, MAX_ROWS, MAX_COLS);
-    getyx(stdscr, row, col);
-
     int yMAX, xMAX;
     getmaxyx(stdscr, yMAX, xMAX);
-    printw("%i, %i, %i, %i\n", yMAX, xMAX, MAX_ROWS, MAX_COLS);
     if(MAX_ROWS > yMAX - 1 || MAX_COLS > xMAX/2 -1) {
         endwin();
         printf("Values are too big for your terminal to handle\n");
         return 0;
     }
+
+    setup_board(board, sap, to, MAX_ROWS, MAX_COLS);
+    getyx(stdscr, row, col);
+
 
     while (1 != 0) {
         draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);

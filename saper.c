@@ -32,7 +32,7 @@ void saper(int a, int b, char board[INDEX][INDEX], int sap[INDEX][INDEX], int to
     if (sap[a][b] == 0) {
         for (int k = 0; k < 16; k += 2) {
             if (a + p[k] >= 0 && a + p[k] < MAX_ROWS && b + p[k + 1] >= 0 && b + p[k + 1] < MAX_COLS) {
-                if (board[a + p[k]][b + p[k + 1]] == '+') {
+                if (board[a + p[k]][b + p[k + 1]] == '-') {
                     if (sap[a + p[k]][b + p[k + 1]] == 0 && to[a + p[k]][b + p[k + 1]] == 0) {
                         to[a + p[k]][b + p[k + 1]] = 1;
                         saper(a + p[k], b + p[k + 1], board, sap, to, MAX_ROWS, MAX_COLS);
@@ -50,7 +50,7 @@ void setup_board(char board[INDEX][INDEX], int sap[INDEX][INDEX], int to[INDEX][
 {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            board[i][j] = '+';
+            board[i][j] = '-';
         }
     }
 
@@ -106,10 +106,10 @@ void update_board(char board[INDEX][INDEX], int sap[INDEX][INDEX], int to[INDEX]
         }
     }
 
-    if (action == 'f' && board[*row][*col] == '+' && flags != MINES) {
+    if (action == 'f' && board[*row][*col] == '-' && flags != MINES) {
         board[*row][*col] = 'F';
     } else if (action == 'f' && board[*row][*col] == 'F') {
-        board[*row][*col] = '+';
+        board[*row][*col] = '-';
         // } else if (action == ' ' && board[*row][*col] >= '0' && board[*row][*col] < 9 + '0') {
         //     new_function(board, sap, *row, *col, to);
     } else if (action == ' ' && board[*row][*col] != 'F') {
@@ -159,7 +159,7 @@ int uncovered(char board[INDEX][INDEX], int MAX_ROWS, int MAX_COLS)
     int index = 0;
     for (int i = 0; i < MAX_ROWS; i++) {
         for (int j = 0; j < MAX_COLS; j++) {
-            if (board[i][j] != '+')
+            if (board[i][j] != '-')
                 index++;
         }
     }
