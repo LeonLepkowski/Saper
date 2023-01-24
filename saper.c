@@ -85,14 +85,14 @@ void draw_board(char board[INDEX][INDEX], int row, int col, int slim, int sap[IN
         for (int j = 0; j < MAX_COLS; j++) {
             if (i == row && j == col) {
                 attron(A_STANDOUT);
-                if (board[i][j] == '@')
-                    attron(COLOR_PAIR(9));
+                // if (board[i][j] == '@')
+                //     attron(COLOR_PAIR(9));
             }
             colors(board, i, j, sap, slim);
             if (i == row && j == col) {
                 attroff(A_STANDOUT);
-                if (board[i][j] == '@')
-                    attroff(COLOR_PAIR(9));
+                // if (board[i][j] == '@')
+                //     attroff(COLOR_PAIR(9));
             }
         }
         printw("\n");
