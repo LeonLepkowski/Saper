@@ -85,14 +85,10 @@ void draw_board(char board[INDEX][INDEX], int row, int col, int slim, int sap[IN
         for (int j = 0; j < MAX_COLS; j++) {
             if (i == row && j == col) {
                 attron(A_STANDOUT);
-                // if (board[i][j] == '@')
-                //     attron(COLOR_PAIR(9));
             }
             colors(board, i, j, sap, slim);
             if (i == row && j == col) {
                 attroff(A_STANDOUT);
-                // if (board[i][j] == '@')
-                //     attroff(COLOR_PAIR(9));
             }
         }
         printw("\n");
@@ -187,7 +183,7 @@ void initialize_colors()
 void end()
 {
     int a = 0;
-    printw("Press ENTER to return to menu...\n");
+    printw("Press ENTER to exit...\n");
     while(a != '\n'){
         a = getch();
     }
@@ -197,7 +193,7 @@ void end()
 bool too_much_bombs(int MAX_ROWS, int MAX_COLS, int MINES)
 {
     if (MINES >= MAX_ROWS * MAX_COLS) {
-        printf("TOO MUCH BOMBS!, TRY VALUE OF MINES LOWER THAN %i...\n\n", MAX_ROWS * MAX_COLS);
+        printf("TOO MUCH BOMBS!, TRY VALUE OF MINES LOWER THAN %i...\n", MAX_ROWS * MAX_COLS);
 
         getch();
 
@@ -286,91 +282,5 @@ void bombs_generator(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_
                 mines_placed++;
             }
         }
-    }
-}
-
-void title_name(int xMAX)
-{
-    attron(COLOR_PAIR(1));
-    mvprintw(7, xMAX / 2 - 23, " _____ _");
-    mvprintw(8, xMAX / 2 - 23, "|     |_|___ ___ ___ _ _ _ ___ ___ ___ ___ ___ ");
-    mvprintw(9, xMAX / 2 - 23, "| | | | |   | -_|_ -| | | | -_| -_| . | -_|  _|");
-    mvprintw(10, xMAX / 2 - 23, "|_|_|_|_|_|_|___|___|_____|___|___|  _|___|_|  ");
-    mvprintw(11, xMAX / 2 - 23, "                                  |_|          ");
-    attroff(COLOR_PAIR(1));
-    refresh();
-}
-
-void options(int* MAX_ROWS, int* MAX_COLS, int* MINES, int* difficulty)
-{
-    int yMAX, xMAX;
-    getmaxyx(stdscr, yMAX, xMAX);
-    WINDOW* optionwin = newwin(6, 14, yMAX / 2 - 5, xMAX / 2 - 5);
-    box(optionwin, 0, 0);
-    refresh();
-    wrefresh(optionwin);
-
-    keypad(optionwin, true);
-    char* choices[] = { "Beginner", "Intermediate", "Expert", "Return" };
-    int choice;
-    int highlight = 0;
-    while (1) {
-        while (1) {
-            box(optionwin, 0, 0);
-            for (int i = 0; i < 4; i++) {
-                if(*difficulty == i) {
-                    attron(COLOR_PAIR(2));
-                    mvprintw(yMAX/2 - 4 + i, xMAX/2 - 6, ">");
-                    attroff(COLOR_PAIR(2));
-                    refresh();
-                }
-                if (i == highlight)
-                    wattron(optionwin, A_REVERSE);
-                mvwprintw(optionwin, i + 1, 1, choices[i]);
-                wattroff(optionwin, A_REVERSE);
-            }
-            choice = wgetch(optionwin);
-            switch (choice) {
-            case KEY_UP:
-                highlight--;
-                if (highlight == -1)
-                    highlight = 0;
-                break;
-            case KEY_DOWN:
-                highlight++;
-                if (highlight == 4)
-                    highlight = 3;
-                break;
-            default:
-                break;
-            }
-            if (choice == 10)
-                break;
-        }
-        if (strcmp(choices[highlight], "Beginner") == 0) {
-            *difficulty = 0;
-            *MAX_ROWS = 9;
-            *MAX_COLS = 9;
-            *MINES = 10;
-        }
-
-        if (strcmp(choices[highlight], "Intermediate") == 0) {
-            *difficulty = 1;
-            *MAX_ROWS = 16;
-            *MAX_COLS = 16;
-            *MINES = 40;
-        }
-
-        if (strcmp(choices[highlight], "Expert") == 0) {
-            *difficulty = 2;
-            *MAX_ROWS = 16;
-            *MAX_COLS = 30;
-            *MINES = 99;
-        }
-        if (strcmp(choices[highlight], "Return") == 0) {
-            clear();
-            return;
-        }
-        erase();
     }
 }
