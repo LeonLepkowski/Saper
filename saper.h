@@ -5,7 +5,7 @@
 #include <time.h>
 #include <string.h>
 
-#define INDEX 100
+#define INDEX 200
 
 void setup_board(char board[INDEX][INDEX], int sap[INDEX][INDEX], int to[INDEX][INDEX], int rows, int cols);
 void draw_board(char board[INDEX][INDEX], int row, int col, int slim, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_COLS, int MINES);

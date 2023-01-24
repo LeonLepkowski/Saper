@@ -44,13 +44,11 @@ int main(int argc, char* argv[])
 
 
 
-    // char* temp;
     int slim = 0;
-    // if (argc == 5) {
-    //     temp = input(argv);
-    //     if (strcmp(temp, "--slim") == 0)
-    //         slim = 1;
-    // }
+    if (argc == 6) {
+        if (strcmp(argv[5], "--slim") == 0)
+            slim = 1;
+    }
 
     if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
         return 0;
@@ -69,7 +67,7 @@ int main(int argc, char* argv[])
 
     int yMAX, xMAX;
     getmaxyx(stdscr, yMAX, xMAX);
-    if(MAX_ROWS > yMAX - 1 || MAX_COLS > xMAX/2 -1) {
+    if(MAX_ROWS > yMAX - 1 || MAX_COLS > (slim+1)*xMAX/2 -1) {
         endwin();
         printf("Values are too big for your terminal to handle\n");
         return 0;
