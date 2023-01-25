@@ -352,11 +352,11 @@ void bombs_generator(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_
     // }
     // while (mines_placed < MINES) {
     //     int index = rand() % max;
-    //     if (index / MAX_ROWS != i || index % MAX_COLS != j) {
-    //         mines_placed++;
+    //     if ((index / MAX_ROWS != i) || (index % MAX_COLS != j)) {
     //         tab[index] = tab[max];
     //         sap[index / MAX_ROWS][index % MAX_COLS] = 9;
     //         gen(index / MAX_ROWS, index % MAX_COLS, sap, MAX_ROWS, MAX_COLS);
+    //         mines_placed++;
     //         max--;
     //     }
     // }

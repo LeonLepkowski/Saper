@@ -1,13 +1,45 @@
 #include "saper.h"
 
+// Losowanie bomb
+// Wpisywanie --
+// Nazwy zmiennych
+
 int main(int argc, char* argv[])
 {
+    if (argc != 2 && argc != 3 && argc != 5 && argc != 6) {
+        printf("Try again!\n");
+        return 0;
+    }
+    int slim = 0;
+    if (argc == 3) {
+        if (strcmp(argv[1], "--slim") == 0) {
+            argv[1] = argv[2];
+            argv[2] = "--slim";
+            slim = 1;
+        } else if (strcmp(argv[2], "--slim") == 0) {
+            slim = 1;
+        } else {
+            printf("Try again!\n");
+            return 0;
+        }
+    }
+    if (argc == 6) {
+        if (strcmp(argv[5], "--slim") == 0) {
+            slim = 1;
+        } else if (strcmp(argv[1], "--slim") == 0) {
+            argv[1] = argv[2];
+            argv[2] = argv[3];
+            argv[3] = argv[4];
+            argv[4] = argv[5];
+            argv[5] = "--slim";
+            slim = 1;
+        } else {
+            printf("Try again!\n");
+            return 0;
+        }
+    }
+
     int MAX_ROWS, MAX_COLS, MINES;
-    // if(argc != 2 && argc != 5){
-    //     printf("Try again!\n");
-    //     return 0;
-    // }
-    if(argc == 10) return 0;
 
     if (strcmp(argv[1], "--beginner") == 0) {
         MAX_ROWS = 9;
@@ -38,14 +70,6 @@ int main(int argc, char* argv[])
             printf("You are writing garbage\n");
             return 0;
         }
-        
-    }
-
-
-    int slim = 0;
-    if (argc == 6) {
-        if (strcmp(argv[5], "--slim") == 0)
-            slim = 1;
     }
 
     if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
@@ -65,7 +89,7 @@ int main(int argc, char* argv[])
 
     int yMAX, xMAX;
     getmaxyx(stdscr, yMAX, xMAX);
-    if(MAX_ROWS > yMAX - 1 || MAX_COLS > (slim+1)*xMAX/2 -1) {
+    if (MAX_ROWS > yMAX - 1 || MAX_COLS > (slim + 1) * xMAX / 2 - 1) {
         endwin();
         printf("Values are too big for your terminal to handle\n");
         return 0;
@@ -74,23 +98,22 @@ int main(int argc, char* argv[])
     setup_board(board, sap, to, MAX_ROWS, MAX_COLS);
     getyx(stdscr, row, col);
 
-
     while (1 != 0) {
         draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
 
         int action = wgetch(stdscr);
-        if(action == 27) {
+        if (action == 27) {
             endwin();
             return 0;
         }
 
         if (action == KEY_LEFT && col > 0) {
             col--;
-        } else if (action == KEY_RIGHT && col < MAX_COLS-1) {
+        } else if (action == KEY_RIGHT && col < MAX_COLS - 1) {
             col++;
         } else if (action == KEY_UP && row > 0) {
             row--;
-        } else if (action == KEY_DOWN && row < MAX_ROWS -1) {
+        } else if (action == KEY_DOWN && row < MAX_ROWS - 1) {
             row++;
         }
 
@@ -98,22 +121,30 @@ int main(int argc, char* argv[])
             row--;
         } else if (action == '4' && col > 0) {
             col--;
-        } else if (action == '6' && col < MAX_COLS -1) {
+        } else if (action == '6' && col < MAX_COLS - 1) {
             col++;
-        } else if (action == '2' && row < MAX_ROWS -1) {
+        } else if (action == '2' && row < MAX_ROWS - 1) {
             row++;
         } else if (action == '7') {
-            if(row > 0) row--;
-            if(col > 0) col--;
+            if (row > 0)
+                row--;
+            if (col > 0)
+                col--;
         } else if (action == '9') {
-            if(row > 0) row--;
-            if(col < MAX_COLS -1) col++;
+            if (row > 0)
+                row--;
+            if (col < MAX_COLS - 1)
+                col++;
         } else if (action == '1') {
-            if (row < MAX_ROWS -1) row++;
-            if (col > 0) col--;
+            if (row < MAX_ROWS - 1)
+                row++;
+            if (col > 0)
+                col--;
         } else if (action == '3') {
-            if (row < MAX_ROWS -1) row++;
-            if (col < MAX_COLS -1) col++;
+            if (row < MAX_ROWS - 1)
+                row++;
+            if (col < MAX_COLS - 1)
+                col++;
         }
 
         if (uncovered(board, MAX_ROWS, MAX_COLS) == 0 && (action == ' ' || action == 'f')) {
