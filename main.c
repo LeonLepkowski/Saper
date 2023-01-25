@@ -42,8 +42,6 @@ int main(int argc, char* argv[])
     }
 
 
-
-
     int slim = 0;
     if (argc == 6) {
         if (strcmp(argv[5], "--slim") == 0)
@@ -118,29 +116,17 @@ int main(int argc, char* argv[])
             if (col < MAX_COLS -1) col++;
         }
 
-
         if (uncovered(board, MAX_ROWS, MAX_COLS) == 0 && (action == ' ' || action == 'f')) {
             bombs_generator(row, col, sap, MAX_ROWS, MAX_COLS, MINES);
         }
 
-        if (action == ' ' && sprawdz(row, col, sap, board, MAX_ROWS, MAX_COLS)) {
+        if (action == ' ' && (sprawdz(row, col, sap, board, MAX_ROWS, MAX_COLS) || (board[row][col] > '0' && board[row][col] < 9 + '0' && new_function(board, sap, row, col, to, MAX_ROWS, MAX_COLS)))) {
             draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
             gameover();
             end();
             return 0;
         }
-
-        if (action == ' ' && board[row][col] > '0' && board[row][col] < 9 + '0') {
-            if (new_function(board, sap, row, col, to, MAX_ROWS, MAX_COLS)) {
-                draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
-                gameover();
-                end();
-                return 0;
-            }
-        }
-
         update_board(board, sap, to, &row, &col, action, MAX_ROWS, MAX_COLS, MINES);
-
         if (czy_koniec(board, MAX_ROWS, MAX_COLS) == MAX_COLS * MAX_ROWS - MINES) {
             draw_board(board, row, col, slim, sap, MAX_ROWS, MAX_COLS, MINES);
             win();
