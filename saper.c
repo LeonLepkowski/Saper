@@ -323,22 +323,21 @@ bool new_function(char board[INDEX][INDEX], int sap[INDEX][INDEX], int i, int j,
 
 void bombs_generator(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_COLS, int MINES)
 {
-    // i, j - miejsce pierwszwgo strzalu
     int mines_placed = 0;
-    int max = MAX_COLS * MAX_ROWS - 1; // miejsce ostatniej
+    int max = MAX_COLS * MAX_ROWS - 1;
     int tab[MAX_COLS * MAX_ROWS];
     for (int k = 0; k < MAX_COLS * MAX_ROWS; k++) {
         tab[k] = k;
     }
+    tab[i * MAX_COLS + j] = tab[max];
+    max--;
     while (mines_placed < MINES) {
         int index = rand() % (max + 1);
-        if ((index / MAX_COLS != i) || (index % MAX_COLS != j)) {
-            sap[tab[index] / MAX_COLS][tab[index] % MAX_COLS] = 9;
-            gen(tab[index] / MAX_COLS, tab[index] % MAX_COLS, sap, MAX_ROWS, MAX_COLS);
-            mines_placed++;
-            tab[index] = tab[max];
-            max--;
-        }
+        sap[tab[index] / MAX_COLS][tab[index] % MAX_COLS] = 9;
+        gen(tab[index] / MAX_COLS, tab[index] % MAX_COLS, sap, MAX_ROWS, MAX_COLS);
+        mines_placed++;
+        tab[index] = tab[max];
+        max--;
     }
 }
 
