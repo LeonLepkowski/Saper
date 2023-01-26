@@ -1,79 +1,17 @@
 #include "saper.h"
 
-// Wpisywanie --
 // Nazwy zmiennych
 
 int main(int argc, char* argv[])
 {
     int slim = 0;
-    if (argc == 3) {
-        if (strcmp(argv[1], "--slim") == 0) {
-            argv[1] = argv[2];
-            argv[2] = "--slim";
-            slim = 1;
-        } else if (strcmp(argv[2], "--slim") == 0) {
-            slim = 1;
-        } else {
-            printf("Try again!\n");
-            return 0;
-        }
-    }
-    if (argc == 6) {
-        if (strcmp(argv[5], "--slim") == 0) {
-            slim = 1;
-        } else if (strcmp(argv[1], "--slim") == 0) {
-            argv[1] = argv[2];
-            argv[2] = argv[3];
-            argv[3] = argv[4];
-            argv[4] = argv[5];
-            argv[5] = "--slim";
-            slim = 1;
-        } else {
-            printf("Try again!\n");
-            return 0;
-        }
-    }
-
     int MAX_ROWS, MAX_COLS, MINES;
 
-    if (strcmp(argv[1], "--beginner") == 0) {
-        MAX_ROWS = 9;
-        MAX_COLS = 9;
-        MINES = 10;
-    } else if (strcmp(argv[1], "--intermediate") == 0) {
-        MAX_ROWS = 16;
-        MAX_COLS = 16;
-        MINES = 40;
-    } else if (strcmp(argv[1], "--expert") == 0) {
-        MAX_ROWS = 16;
-        MAX_COLS = 30;
-        MINES = 99;
-    } else if (strcmp(argv[1], "--custom") == 0) {
-        if(argc < 5) {
-            printf("Too few arguments, try again!\n");
-            return 0;
-        }
-        char* a;
-        char* b;
-        char* c;
-        MAX_ROWS = strtol(argv[2], &a, 10);
-        MAX_COLS = strtol(argv[3], &b, 10);
-        MINES = strtol(argv[4], &c, 10);
-        if ((a[0] != '\0') || (b[0] != '\0') || (c[0] != '\0') || MAX_COLS <= 0 || MAX_ROWS <= 0 || MINES < 0) {
-            printf("You are writing garbage\n");
-            return 0;
-        }
-    } else {
-        printf("Unknown command, try again!\n");
+    if (start(argc, argv, &slim, &MAX_ROWS, &MAX_COLS, &MINES))
         return 0;
-    }
-    if (argc != 2 && argc != 3 && argc != 5 && argc != 6) {
-        printf("Number of arguments is wrong, try again!\n");
-        return 0;
-    }
 
-    if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
-        return 0;
+    // if (too_much_bombs(MAX_ROWS, MAX_COLS, MINES))
+    //     return 0;
 
     initscr();
     curs_set(0);

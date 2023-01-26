@@ -23,3 +23,4 @@ char* input(char* argv[]);
 void bombs_generator(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_COLS, int MINES);
 void title_name(int xMAX);
 void options(int* MAX_ROWS, int* MAX_COLS, int* MINES, int* difficulty);
+bool start(int argc, char* argv[], int* slim, int* MAX_ROWS, int* MAX_COLS, int* MINES);
