@@ -14,7 +14,7 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 ## To compile file type in terminal:
 
 ```bash
-   gcc main.c saper.c -o main -std=c11 -Wall -Wextra -Werror -xc -lncurses
+   gcc main.c saper.c -o main -lncurses
 ```
 
 ## To run it type:
