@@ -344,7 +344,7 @@ void bombs_generator(int i, int j, int sap[INDEX][INDEX], int MAX_ROWS, int MAX_
 bool start(int argc, char* argv[], int* slim, int* MAX_ROWS, int* MAX_COLS, int* MINES)
 {
     if (argc == 1) {
-        printf("To few arguments, try again!");
+        printf("To few arguments, try again!\n");
         return true;
     }
     if (argc == 3) {
