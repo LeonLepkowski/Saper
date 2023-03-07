@@ -75,7 +75,6 @@ bool start(int argc, char* argv[], int* slim, int* MAX_ROWS, int* MAX_COLS, int*
             return true;
         }
         else if((tmp = isDifficulty(argv[i])) != -1) {
-            printf("%d\n", tmp);
             if(difficultyIndex != -1) {
                 printf("Difficulty is already set!\n");
                 return true;

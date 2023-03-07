@@ -46,13 +46,13 @@ int main(int argc, char* argv[])
             return 0;
         }
 
-        if (action == KEY_LEFT && col > 0) {
+        if ((action == KEY_LEFT || action == 'h') && col > 0) {
             col--;
-        } else if (action == KEY_RIGHT && col < MAX_COLS - 1) {
+        } else if ((action == KEY_RIGHT || action == 'l') && col < MAX_COLS - 1) {
             col++;
-        } else if (action == KEY_UP && row > 0) {
+        } else if ((action == KEY_UP || action == 'k') && row > 0) {
             row--;
-        } else if (action == KEY_DOWN && row < MAX_ROWS - 1) {
+        } else if ((action == KEY_DOWN || action == 'j') && row < MAX_ROWS - 1) {
             row++;
         }
 
