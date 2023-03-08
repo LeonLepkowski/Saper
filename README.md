@@ -3,7 +3,7 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 
 ## Controls:
 
-* Arrow keys - move around map
+* Arrow keys (or hjkl) - move around map
 
 * Space key - uncover current box
 
@@ -14,12 +14,45 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 ## To compile file type in terminal:
 
 ```bash
-   gcc main.c saper.c -o main -lncurses
+   make
+```
+
+You can also specify some parameters:
+```bash
+   make CC=clang EXE=minesweeper
+```
+
+Binary will be placed in _build folder
+
+## To clear `_build` directory type:
+
+```bash
+   make clean
+```
+
+## To install type:
+
+```bash
+   make install
+```
+
+Default location: `/usr/local/bin`
+
+You can change it by adding `PREFIX` argument. Game will be installed to `<PREFIX>/bin`
+
+```bash
+   make install PREFIX=~./local
+```
+
+## To uninstall type:
+
+```bash
+   make uninstall
 ```
 
 ## To run it type:
 ```bash
-   ./main [command]
+   saper [command]
 ```
 > There are 3 different difficulties: --beginner, --intermediate and --expert.
 > You can also use --custom, where you put 3 numbers, which are: width, hight and number of mines.
@@ -31,7 +64,7 @@ Minesweeper is a logic puzzle video game genre generally played on personal comp
 You also need to download ncurses library to compile the file
 
 ```bash
-  sudo apt-get install libncurses5-dev libncursesw5-dev
+   sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
 <br />
 <br />
